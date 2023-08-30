@@ -46,3 +46,6 @@ _deps
 # Build - Bin folders
 bin/
 build*/
+
+# Cache
+.cache/
