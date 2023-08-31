@@ -30,20 +30,16 @@ namespace d1 {
         if (file_name.substr(file_name.find_last_of(".") + 1) != "txt") {
             throw 20;
         }
-        std::string base_dir = "../libs/day1/test";
-        std::string path = base_dir + "/" + file_name;
 
         std::string trajectory;
 
-        std::ifstream file(path);
+        std::ifstream file(file_name);
         if (file.good()) {
             std::getline(file, trajectory);
             file.close();
         } else {
             throw 20;
         }
-
-        std::cout << path << std::endl;
 
         return trajectory;
     }

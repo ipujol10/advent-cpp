@@ -38,8 +38,9 @@ TEST(FloorTest, Exception) {
 }
 
 TEST(ReadTest, GoodFiles) {
-    EXPECT_EQ(d1::read_input("files/test1.txt"), "test1");
-    EXPECT_EQ(d1::read_input("files/test2.txt"), "(())");
+    std::string base = "../libs/day1/test/";
+    EXPECT_EQ(d1::read_input(base + "files/test1.txt"), "test1");
+    EXPECT_EQ(d1::read_input(base + "files/test2.txt"), "(())");
 }
 
 TEST(ReadTest, FileDoesntExist) {
