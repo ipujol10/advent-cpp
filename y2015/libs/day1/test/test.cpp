@@ -29,6 +29,24 @@ TEST(FloorTest, Fm3) {
 }
 
 TEST(FloorTest, Exception) {
-    EXPECT_THROW(d1::floor(" "), int);
+    try {
+        d1::floor(" ");
+    } catch (int e) {
+        EXPECT_EQ(e, 10);
+    }
     EXPECT_THROW(d1::floor("(()/"), int);
+}
+
+TEST(ReadTest, GoodFiles) {
+    EXPECT_EQ(d1::read_input("files/test1.txt"), "test1");
+    EXPECT_EQ(d1::read_input("files/test2.txt"), "(())");
+}
+
+TEST(ReadTest, FileDoesntExist) {
+    try {
+        d1::read_input("test1.txt");
+    } catch (int e) {
+        EXPECT_EQ(e, 20);
+    }
+    EXPECT_THROW(d1::read_input(""), int);
 }
