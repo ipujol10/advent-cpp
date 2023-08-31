@@ -3,7 +3,7 @@ project(Day1_2015)
 set(LIBRARY_NAME D1_2015)
 
 add_library(${LIBRARY_NAME} STATIC
-    include/day1.hpp
+    include/${LIBRARY_NAME}/day1.hpp
     src/day1.cpp
     )
 
