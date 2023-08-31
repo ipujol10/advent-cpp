@@ -43,4 +43,25 @@ namespace d1 {
 
         return trajectory;
     }
+
+    int basement(const std::string &trajectory) {
+        int fl = 0;
+        int bas = 1;
+
+        for (char dir : trajectory) {
+            switch (dir) {
+                case '(':
+                    fl++;
+                    break;
+                case ')':
+                    fl--;
+                    break;
+            }
+            if (fl == -1) {
+                return bas;
+            }
+            bas++;
+        }
+        return -1;
+    }
 }

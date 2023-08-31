@@ -51,3 +51,14 @@ TEST(ReadTest, FileDoesntExist) {
     }
     EXPECT_THROW(d1::read_input(""), int);
 }
+
+TEST(BasementTest, Single) {
+    EXPECT_EQ(d1::basement("("), -1); // )
+    EXPECT_EQ(d1::basement(")"), 1);
+    EXPECT_EQ(d1::basement(""), -1);
+}
+
+TEST(BasementTest, Good) {
+    EXPECT_EQ(d1::basement("()())"), 5);
+    EXPECT_EQ(d1::basement("(((()))))"), 9);
+}
