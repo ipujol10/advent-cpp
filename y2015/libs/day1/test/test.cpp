@@ -27,3 +27,8 @@ TEST(FloorTest, Fm3) {
     EXPECT_EQ(d1::floor(")))"), -3);
     EXPECT_EQ(d1::floor(")())())"), -3);
 }
+
+TEST(FloorTest, Exception) {
+    EXPECT_THROW(d1::floor(" "), int);
+    EXPECT_THROW(d1::floor("(()/"), int);
+}

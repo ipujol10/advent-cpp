@@ -1,4 +1,5 @@
 #include "D1_2015/day1.hpp"
+#include <iostream>
 
 namespace d1 {
     int floor(const std::string &trajectory) {
@@ -13,7 +14,8 @@ namespace d1 {
                     f--;
                     break;
                 default:
-                    throw "Character not valid";
+                    std::cout << "Character not valid\n";
+                    throw 10;
                     break;
             }
         }
