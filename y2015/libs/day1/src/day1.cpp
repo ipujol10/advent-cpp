@@ -1,3 +1,6 @@
+#ifndef DAY1_HPP
+#define DAY1_HPP
+
 #include "D1_2015/day1.hpp"
 #include <iostream>
 #include <fstream>
@@ -65,3 +68,5 @@ namespace d1 {
         return -1;
     }
 }
+
+#endif

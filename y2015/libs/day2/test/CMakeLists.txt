@@ -1,10 +1,7 @@
-project(testDay1)
+project(testDay2)
 
-set(TEST_NAME TestDay1)
+set(TEST_NAME TestDay2)
 
-#########
-# Testing
-#########
 if (BUILD_TESTING)
     include(FetchContent)
     FetchContent_Declare(
@@ -14,5 +11,5 @@ if (BUILD_TESTING)
     FetchContent_MakeAvailable(googletest)
 
     add_executable(${TEST_NAME} test.cpp)
-    target_link_libraries(${TEST_NAME} gtest_main D1_2015)
+    target_link_libraries(${TEST_NAME} gtest_main D2_2015)
 endif()
