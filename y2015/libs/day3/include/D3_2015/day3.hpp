@@ -11,9 +11,10 @@ namespace d3 {
         int y;
     public:
         Point(int x, int y);
-        int getX();
-        int getY();
-        bool operator==(const Point& left);
+        int getX() const;
+        int getY() const;
+        bool operator==(const Point& left) const;
+        Point operator+(const Point& left) const;
     };
 
     class Grid {
