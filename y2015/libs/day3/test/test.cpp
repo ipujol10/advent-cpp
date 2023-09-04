@@ -21,3 +21,14 @@ TEST(PointAddTest, Good) {
     d3::Point out(4, 6);
     EXPECT_EQ(a + b, out);
 }
+
+namespace d3 {
+TEST(GridConstructorTest, Good) {
+    d3::Grid g;
+    // std::set<d3::Point> s({0, 0});
+    std::set<Point> s;
+    Point p(0, 0);
+    s.insert(p);
+    // EXPECT_EQ(g.grid, s);
+}
+}

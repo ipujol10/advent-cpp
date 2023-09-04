@@ -2,7 +2,8 @@
 #define DAY3_HPP
 
 #include <string>
-#include <vector>
+#include <set>
+#include <gtest/gtest.h>
 
 namespace d3 {
     class Point {
@@ -19,8 +20,8 @@ namespace d3 {
 
     class Grid {
     private:
-        std::vector<Point> grid;
-        int visited;
+        std::set<Point> grid;
+        FRIEND_TEST(GridConstructorTest, Good);
     public:
         Grid();
         bool beenVisited(const Point& p);
