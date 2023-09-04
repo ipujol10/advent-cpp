@@ -58,4 +58,23 @@ namespace d3 {
             grid.insert(lastPoint);
         }
     }
+
+    void Grid::combineGrids(const Grid& left_grid) {
+        this->grid.insert(left_grid.grid.begin(), left_grid.grid.end());
+    }
+
+    void split(const std::string &in, std::string &out1, std::string &out2) {
+        out1 = "";
+        out2 = "";
+        bool first = true;
+        for (char letter : in) {
+            if (first) {
+                first = false;
+                out1.push_back(letter);
+            } else {
+                first = true;
+                out2.push_back(letter);
+            }
+        }
+    }
 }

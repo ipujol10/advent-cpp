@@ -108,4 +108,29 @@ TEST(GridTest, PerformRide) {
     EXPECT_TRUE(g.beenVisited(up));
     EXPECT_FALSE(g.beenVisited(diag));
 }
+
+TEST(GridTest, Combine) {
+    Grid a, b;
+    a.combineGrids(b);
+    std::set<Point> s = {{0, 0}};
+    EXPECT_EQ(a.grid, s);
+
+    a.grid = {{0, 0}, {1, 0}, {1, 1}};
+    b.grid = {{0, 0}, {-1, 0}, {-1, -1}};
+    a.combineGrids(b);
+    s = {{0, 0}, {1, 0}, {1, 1}, {0, 0}, {-1, 0}, {-1, -1}};
+    EXPECT_EQ(a.grid, s);
+}
+}
+
+TEST(SplitTest, Good) {
+    std::string out1, out2;
+
+    d3::split("^v", out1, out2);
+    EXPECT_EQ(out1, "^");
+    EXPECT_EQ(out2, "v");
+
+    d3::split("^>v<", out1, out2);
+    EXPECT_EQ(out1, "^v");
+    EXPECT_EQ(out2, "><");
 }

@@ -27,12 +27,16 @@ namespace d3 {
         FRIEND_TEST(GridTest, Constructor);
         FRIEND_TEST(GridTest, BeenVisited);
         FRIEND_TEST(GridTest, TotalVisited);
+        FRIEND_TEST(GridTest, Combine);
     public:
         Grid();
         bool beenVisited(const Point& p) const;
         int totalVisited() const;
         void performRide(const std::string& path);
+        void combineGrids(const Grid& left_grid);
     };
+
+    void split(const std::string& in, std::string& out1, std::string& out2);
 }
 
 #endif //DAY3_HPP
