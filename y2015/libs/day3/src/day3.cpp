@@ -16,4 +16,46 @@ namespace d3 {
         int ny = this->y + left.getY();
         return {nx, ny};
     }
+
+    bool Point::operator<(const Point& left) const {
+        if (this->y < left.getY()) { return true; }
+        if (this->y > left.getY()) { return false; }
+        if (this->x < left.getX()) { return true; }
+        return false;
+    }
+
+    Grid::Grid(): lastPoint({0, 0}), RIGHT({1, 0}), LEFT({-1, 0}),
+        UP({0, 1}), DOWN({0, -1}) {
+            grid.insert({0, 0});
+        }
+
+    bool Grid::beenVisited(const Point& p) const {
+        return grid.find(p) != grid.end();
+    }
+
+    int Grid::totalVisited() const {
+        return grid.size();
+    }
+
+    void Grid::performRide(const std::string& path) {
+        lastPoint = {0, 0};
+        grid = {{0, 0}};
+        for (char dir : path) {
+            switch (dir) {
+                case '<':
+                    lastPoint = lastPoint + LEFT;
+                    break;
+                case '>':
+                    lastPoint = lastPoint + RIGHT;
+                    break;
+                case '^':
+                    lastPoint = lastPoint + UP;
+                    break;
+                case 'v':
+                    lastPoint = lastPoint + DOWN;
+                    break;
+            }
+            grid.insert(lastPoint);
+        }
+    }
 }

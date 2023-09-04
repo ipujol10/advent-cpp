@@ -16,16 +16,21 @@ namespace d3 {
         int getY() const;
         bool operator==(const Point& left) const;
         Point operator+(const Point& left) const;
+        bool operator<(const Point& left) const;
     };
 
     class Grid {
     private:
         std::set<Point> grid;
-        FRIEND_TEST(GridConstructorTest, Good);
+        Point lastPoint;
+        const Point UP, DOWN, RIGHT, LEFT;
+        FRIEND_TEST(GridTest, Constructor);
+        FRIEND_TEST(GridTest, BeenVisited);
+        FRIEND_TEST(GridTest, TotalVisited);
     public:
         Grid();
-        bool beenVisited(const Point& p);
-        int totalVisited();
+        bool beenVisited(const Point& p) const;
+        int totalVisited() const;
         void performRide(const std::string& path);
     };
 }
