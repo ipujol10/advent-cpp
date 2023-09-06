@@ -1,4 +1,5 @@
 #include "D4_2015/day4.hpp"
+#include <charconv>
 #include <cmath>
 #include <cstring>
 
@@ -125,5 +126,22 @@ namespace d4 {
         }
 
         return h;
+    }
+
+    bool goodHash(const std::string &hash) {
+        auto first5 = hash.substr(0, 5);
+        return first5 == "00000";
+    }
+
+    std::string getNumber(const std::string &key) {
+        int n = 0;
+        std::string number, hash;
+
+        do {
+            number = std::to_string(n);
+            hash = md5(key + number);
+            n++;
+        } while (!goodHash(hash));
+        return number;
     }
 }

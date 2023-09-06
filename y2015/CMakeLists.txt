@@ -20,6 +20,9 @@ target_link_libraries(Day2 PRIVATE D2_2015)
 add_executable(Day3 src/day3.cpp)
 target_link_libraries(Day3 PRIVATE D3_2015)
 
+add_executable(Day4 src/day4.cpp)
+target_link_libraries(Day4 PRIVATE D4_2015)
+
 if (BUILD_TESTING)
     enable_testing()
     add_test(NAME TestDay1 COMMAND TestDay1)

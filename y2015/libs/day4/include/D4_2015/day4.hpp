@@ -19,6 +19,9 @@ namespace d4 {
     static unsigned *calctable(unsigned *k);
     static unsigned rol(unsigned r, short N);
     static unsigned* MD5Hash(const std::string& msg);
+
+    std::string getNumber(const std::string& key);
+    bool goodHash(const std::string& hash);
 }
 
 #endif // !DAY4_HPP
