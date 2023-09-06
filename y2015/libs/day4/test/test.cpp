@@ -14,12 +14,14 @@ TEST(MD5Test, Good) {
 }
 
 TEST(GoodHashTest, Good) {
-    EXPECT_TRUE(d4::goodHash("000001dbbfa"));
-    EXPECT_TRUE(d4::goodHash("000006136ef"));
-    EXPECT_FALSE(d4::goodHash("000016136ef"));
+    EXPECT_TRUE(d4::goodHash("000001dbbfa", 5));
+    EXPECT_TRUE(d4::goodHash("000006136ef", 5));
+    EXPECT_FALSE(d4::goodHash("000016136ef", 5));
+    EXPECT_FALSE(d4::goodHash("000001dbbfa", 6));
+    EXPECT_TRUE(d4::goodHash("000000dbbfa", 6));
 }
 
 TEST(GetNumberTest, Good) {
-    EXPECT_EQ(d4::getNumber("abcdef"), "609043");
-    EXPECT_EQ(d4::getNumber("pqrstuv"), "1048970");
+    EXPECT_EQ(d4::getNumber("abcdef", 5), "609043");
+    EXPECT_EQ(d4::getNumber("pqrstuv", 5), "1048970");
 }

@@ -20,8 +20,8 @@ namespace d4 {
     static unsigned rol(unsigned r, short N);
     static unsigned* MD5Hash(const std::string& msg);
 
-    std::string getNumber(const std::string& key);
-    bool goodHash(const std::string& hash);
+    std::string getNumber(const std::string& key, int num);
+    bool goodHash(const std::string& hash, int num);
 }
 
 #endif // !DAY4_HPP

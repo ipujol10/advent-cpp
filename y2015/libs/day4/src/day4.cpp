@@ -128,12 +128,12 @@ namespace d4 {
         return h;
     }
 
-    bool goodHash(const std::string &hash) {
-        auto first5 = hash.substr(0, 5);
-        return first5 == "00000";
+    bool goodHash(const std::string &hash, int num) {
+        auto first5 = hash.substr(0, num);
+        return first5 == std::string(num, '0');
     }
 
-    std::string getNumber(const std::string &key) {
+    std::string getNumber(const std::string &key, int num) {
         int n = 0;
         std::string number, hash;
 
@@ -141,7 +141,7 @@ namespace d4 {
             number = std::to_string(n);
             hash = md5(key + number);
             n++;
-        } while (!goodHash(hash));
+        } while (!goodHash(hash, num));
         return number;
     }
 }
