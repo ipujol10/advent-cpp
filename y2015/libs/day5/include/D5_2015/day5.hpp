@@ -8,6 +8,9 @@ namespace d5 {
     bool repeatLetter(const std::string& text);
     bool notBanned(const std::string& text);
     bool notNaighty(const std::string& text);
+    bool anyPairRepeted2(const std::string& text);
+    bool letterInBetween(const std::string& text);
+    bool notNaughty2(const std::string& text);
 }
 
 #endif // !DAY5_HPP

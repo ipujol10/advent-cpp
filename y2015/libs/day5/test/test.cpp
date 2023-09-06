@@ -24,3 +24,23 @@ TEST(ConditionTest, NotBanned) {
     EXPECT_FALSE(d5::notBanned("haegwjzuvuyypxyu"));
     EXPECT_TRUE(d5::notBanned("dvszwmarrgswjxmb"));
 }
+
+TEST(ConditionTest, RepetedPair) {
+    EXPECT_TRUE(d5::anyPairRepeted2("qjhvhtzxzqqjkmpb"));
+    EXPECT_TRUE(d5::anyPairRepeted2("xxyxx"));
+    EXPECT_TRUE(d5::anyPairRepeted2("uurcxstgmygtbstg"));
+    EXPECT_FALSE(d5::anyPairRepeted2("ieodomkazucvgmuy"));
+    EXPECT_TRUE(d5::anyPairRepeted2("xyxy"));
+    EXPECT_TRUE(d5::anyPairRepeted2("aabcdefgaa"));
+    EXPECT_FALSE(d5::anyPairRepeted2("aaa"));
+}
+
+TEST(ConditionTest, InBetween) {
+    EXPECT_TRUE(d5::letterInBetween("qjhvhtzxzqqjkmpb"));
+    EXPECT_TRUE(d5::letterInBetween("xxyxx"));
+    EXPECT_FALSE(d5::letterInBetween("uurcxstgmygtbstg"));
+    EXPECT_TRUE(d5::letterInBetween("ieodomkazucvgmuy"));
+    EXPECT_TRUE(d5::letterInBetween("xyx"));
+    EXPECT_TRUE(d5::letterInBetween("abcdefeghi"));
+    EXPECT_TRUE(d5::letterInBetween("aaa"));
+}
