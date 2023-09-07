@@ -44,8 +44,8 @@ namespace d7 {
         std::regex set("^([0-9]+)$");
         std::regex andR("^([a-z]+) AND ([a-z]+)$");
         std::regex orR("^([a-z]+) OR ([a-z]+)$");
-        std::regex lshift("^([a-z]+) LSHIFT ([a-z]+)$");
-        std::regex rshift("^([a-z]+) RSHIFT ([a-z]+)$");
+        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+)$");
+        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+)$");
         std::regex notR("^NOT ([a-z]+)$");
         std::smatch matches;
         std::string output;
@@ -60,5 +60,37 @@ namespace d7 {
             out[1] = output;
             return operations::set;
         }
+        if (std::regex_match(first_match, input, notR)) {
+            out[0] = input[1];
+            out[1] = output;
+            return operations::notGate;
+        }
+        if (std::regex_match(first_match, input, andR)) {
+            out[0] = input[1];
+            out[1] = input[2];
+            out[2] = output;
+            return operations::andGate;
+        }
+        if (std::regex_match(first_match, input, orR)) {
+            out[0] = input[1];
+            out[1] = input[2];
+            out[2] = output;
+            return operations::orGate;
+        }
+        if (std::regex_match(first_match, input, lshift)) {
+            out[0] = input[1];
+            out[1] = input[2];
+            out[2] = output;
+            return operations::leftShift;
+        }
+        if (std::regex_match(first_match, input, rshift)) {
+            out[0] = input[1];
+            out[1] = input[2];
+            out[2] = output;
+            return operations::rightShift;
+        }
+        std::cout << in << std::endl;
+        std::cout << "SOMETHING WENT WRONG\n";
+        throw -1;
     }
 }
