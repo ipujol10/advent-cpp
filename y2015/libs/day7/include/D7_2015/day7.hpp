@@ -23,6 +23,17 @@ namespace d7 {
                 const std::string& out);
         valType get(const std::string& cable);
     };
+
+    enum operations {
+        andGate,
+        orGate,
+        notGate,
+        rightShift,
+        leftShift,
+        set
+    };
+
+    operations getElements(const std::string& in, std::string *out);
 }
 
 #endif // !DAY7_HPP

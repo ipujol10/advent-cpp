@@ -56,3 +56,51 @@ TEST(CircuitTest, BitShifting) {
     c.rightShift("a", 2, "a");
     EXPECT_EQ(c.get("a"), 23);
 }
+
+TEST(ReadTest, Input) {
+    std::string* out;
+    d7::operations op;
+    op = d7::getElements("123 -> x", out);
+    EXPECT_EQ(op, d7::operations::set);
+    EXPECT_EQ(out[0], "123");
+    EXPECT_EQ(out[1], "x");
+
+    op = d7::getElements("456 -> ye", out);
+    EXPECT_EQ(op, d7::operations::set);
+    EXPECT_EQ(out[0], "456");
+    EXPECT_EQ(out[1], "ye");
+
+    op = d7::getElements("x AND y -> d", out);
+    EXPECT_EQ(op, d7::operations::andGate);
+    EXPECT_EQ(out[0], "x");
+    EXPECT_EQ(out[1], "y");
+    EXPECT_EQ(out[2], "d");
+
+    op = d7::getElements("xa OR ya -> ea", out);
+    EXPECT_EQ(op, d7::operations::orGate);
+    EXPECT_EQ(out[0], "xa");
+    EXPECT_EQ(out[1], "ya");
+    EXPECT_EQ(out[2], "ea");
+
+    op = d7::getElements("x LSHIFT 2 -> f", out);
+    EXPECT_EQ(op, d7::operations::leftShift);
+    EXPECT_EQ(out[0], "x");
+    EXPECT_EQ(out[1], "2");
+    EXPECT_EQ(out[2], "f");
+
+    op = d7::getElements("y RSHIFT 2 -> g", out);
+    EXPECT_EQ(op, d7::operations::rightShift);
+    EXPECT_EQ(out[0], "y");
+    EXPECT_EQ(out[1], "2");
+    EXPECT_EQ(out[2], "g");
+
+    op = d7::getElements("NOT x -> h", out);
+    EXPECT_EQ(op, d7::operations::notGate);
+    EXPECT_EQ(out[0], "x");
+    EXPECT_EQ(out[1], "h");
+
+    op = d7::getElements("NOT y -> i", out);
+    EXPECT_EQ(op, d7::operations::notGate);
+    EXPECT_EQ(out[0], "y");
+    EXPECT_EQ(out[1], "i");
+}
