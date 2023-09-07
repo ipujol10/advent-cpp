@@ -106,3 +106,12 @@ TEST(InputTest, Good) {
     EXPECT_EQ(out, "turn on");
     EXPECT_EQ(coordinates, compare);
 }
+
+TEST(Grid2Test, Good) {
+    d6::Grid2 g;
+    EXPECT_EQ(g.intensity(), 0);
+    g.turnOn(0, 0, 0, 0);
+    EXPECT_EQ(g.intensity(), 1);
+    g.toggle(0, 0, 999, 999);
+    EXPECT_EQ(g.intensity(), 2000001);
+}

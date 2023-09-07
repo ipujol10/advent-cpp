@@ -26,6 +26,19 @@ namespace d6 {
     std::array<int, 4> translateLine(
             const std::string& input, std::string& out
             );
+
+    class Grid2 {
+    private:
+        int lights[1000][1000];
+        const int SIZE;
+        void generalTurn(int tlx, int tly, int brx, int bry, bool on);
+    public:
+        Grid2();
+        void turnOn(int tlx, int tly, int brx, int bry);
+        void turnOff(int tlx, int tly, int brx, int bry);
+        void toggle(int tlx, int tly, int brx, int bry);
+        int intensity();
+    };
 }
 
 #endif // !DAY6_HPP

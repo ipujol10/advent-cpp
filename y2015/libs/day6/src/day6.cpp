@@ -1,4 +1,5 @@
 #include "D6_2015/day6.hpp"
+#include <algorithm>
 #include <regex>
 
 namespace d6 {
@@ -39,6 +40,51 @@ namespace d6 {
         }
         return count;
     }
+
+    Grid2::Grid2(): SIZE(1000) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                lights[i][j] = 0;
+            }
+        }
+    }
+
+    void Grid2::turnOn(int tlx, int tly, int brx, int bry) {
+        generalTurn(tlx, tly, brx, bry, true);
+    }
+
+    void Grid2::turnOff(int tlx, int tly, int brx, int bry) {
+        generalTurn(tlx, tly, brx, bry, false);
+    }
+
+    void Grid2::generalTurn(int tlx, int tly, int brx, int bry, bool on) {
+        for (int i = tlx; i < brx + 1; i++) {
+            for (int j = tly; j < bry + 1; j++) {
+                int current = lights[i][j];
+                if (on) {
+                    lights[i][j] = ++current;
+                } else {
+                    lights[i][j] = std::max(--current, 0);
+                }
+            }
+        }
+    }
+
+    void Grid2::toggle(int tlx, int tly, int brx, int bry) {
+        turnOn(tlx, tly, brx, bry);
+        turnOn(tlx, tly, brx, bry);
+    }
+
+    int Grid2::intensity() {
+        int count = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                count += lights[i][j];
+            }
+        }
+        return count;
+    }
+
 
     std::array<int, 4> translateLine(
             const std::string &input, std::string &out) {
