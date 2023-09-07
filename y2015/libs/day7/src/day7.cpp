@@ -7,8 +7,8 @@ namespace d7 {
         values["a"] = 0;
     }
 
-    void Circuit::set(const std::string& out, valType value) {
-        values[out] = value;
+    void Circuit::set(const std::string& out, const std::string& value) {
+        values[out] = getNumericalValue(value);
     }
 
     valType Circuit::get(const std::string& cable) {
@@ -17,33 +17,47 @@ namespace d7 {
 
     void Circuit::andGate(const std::string& a, const std::string& b,
                 const std::string& out) {
-        values[out] = values[a] & values[b];
+        values[out] = getNumericalValue(a) & getNumericalValue(b);
     }
 
     void Circuit::orGate(const std::string& a, const std::string& b,
             const std::string& out) {
-        values[out] = values[a] | values[b];
+        values[out] = getNumericalValue(a) | getNumericalValue(b);
     }
 
     void Circuit::notGate(const std::string& in, const std::string& out) {
         values[out] = ~values[in];
     }
 
-    void Circuit::leftShift(const std::string& in, valType shift,
+    void Circuit::leftShift(const std::string& in, const std::string& shift,
                 const std::string& out) {
-        values[out] = values[in] << shift;
+        values[out] = values[in] << getNumericalValue(shift);
     }
 
-    void Circuit::rightShift(const std::string& in, valType shift,
+    void Circuit::rightShift(const std::string& in, const std::string& shift,
                 const std::string& out) {
-        values[out] = values[in] >> shift;
+        values[out] = values[in] >> getNumericalValue(shift);
+    }
+
+    valType Circuit::getNumericalValue(const std::string& in) {
+        try {
+            return (valType)std::stoi(in);
+        } catch (...) {
+            return values[in];
+        }
+    }
+
+    void Circuit::print() {
+        for (const auto &pair : values) {
+            std::cout << "{" << pair.first << ": " << pair.second << "}\n";
+        }
     }
 
     operations getElements(const std::string &in, std::string *out) {
         std::regex rgx("^(.+) -> (.+)$");
-        std::regex set("^([0-9]+)$");
-        std::regex andR("^([a-z]+) AND ([a-z]+)$");
-        std::regex orR("^([a-z]+) OR ([a-z]+)$");
+        std::regex set("^([0-9a-z]+)$");
+        std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+)$");
+        std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+)$");
         std::regex lshift("^([a-z]+) LSHIFT ([0-9]+)$");
         std::regex rshift("^([a-z]+) RSHIFT ([0-9]+)$");
         std::regex notR("^NOT ([a-z]+)$");

@@ -9,19 +9,21 @@ namespace d7 {
     class Circuit {
     private:
         std::map<std::string, valType> values;
+        valType getNumericalValue(const std::string& in);
     public:
         Circuit();
-        void set(const std::string& out, valType value);
+        void set(const std::string& out, const std::string& value);
         void andGate(const std::string& a, const std::string& b,
                 const std::string& out);
-        void leftShift(const std::string& in, valType shift,
+        void leftShift(const std::string& in, const std::string& shift,
                 const std::string& out);
         void notGate(const std::string& in, const std::string& out);
-        void rightShift(const std::string& in, valType shift,
+        void rightShift(const std::string& in, const std::string& shift,
                 const std::string& out);
         void orGate(const std::string& a, const std::string& b,
                 const std::string& out);
         valType get(const std::string& cable);
+        void print();
     };
 
     enum operations {
