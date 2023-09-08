@@ -1,6 +1,8 @@
 #include "D7_2015/day7.hpp"
 #include <iostream>
 #include <regex>
+#include <fstream>
+#include <string>
 
 namespace d7 {
     Circuit::Circuit() {
@@ -53,54 +55,76 @@ namespace d7 {
         }
     }
 
+    void Circuit::pass(const std::string& file_name) {
+        std::string line;
+        std::ifstream file(file_name);
+        std::string variables[3];
+        while (std::getline(file, line)) {
+            auto operation = d7::getElements(line, variables);
+            switch (operation) {
+                case d7::operations::set:
+                    this->set(variables[1], variables[0]);
+                    break;
+                case d7::operations::leftShift:
+                    this->leftShift(variables[0], variables[1], variables[2]);
+                    break;
+                case d7::rightShift:
+                    this->rightShift(variables[0], variables[1], variables[2]);
+                    break;
+                case d7::notGate:
+                    this->notGate(variables[0], variables[1]);
+                    break;
+                case d7::andGate:
+                    this->andGate(variables[0], variables[1], variables[2]);
+                    break;
+                case d7::orGate:
+                    this->orGate(variables[0], variables[1], variables[2]);
+                    break;
+            }
+        }
+    }
+
     operations getElements(const std::string &in, std::string *out) {
-        std::regex rgx("^(.+) -> (.+)$");
-        std::regex set("^([0-9a-z]+)$");
-        std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+)$");
-        std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+)$");
-        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+)$");
-        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+)$");
-        std::regex notR("^NOT ([a-z]+)$");
+        std::regex set("^([0-9a-z]+) -> ([a-z]+)$");
+        std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex notR("^NOT ([a-z]+) -> ([a-z]+)$");
         std::smatch matches;
-        std::string output;
 
-        std::regex_match(in, matches, rgx);
-        output = matches[2];
-
-        std::smatch input;
-        std::string first_match = matches[1];
-        if (std::regex_match(first_match, input, set)) {
-            out[0] = input[1];
-            out[1] = output;
+        if (std::regex_match(in, matches, set)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
             return operations::set;
         }
-        if (std::regex_match(first_match, input, notR)) {
-            out[0] = input[1];
-            out[1] = output;
+        if (std::regex_match(in, matches, notR)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
             return operations::notGate;
         }
-        if (std::regex_match(first_match, input, andR)) {
-            out[0] = input[1];
-            out[1] = input[2];
-            out[2] = output;
+        if (std::regex_match(in, matches, andR)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
+            out[2] = matches[3];
             return operations::andGate;
         }
-        if (std::regex_match(first_match, input, orR)) {
-            out[0] = input[1];
-            out[1] = input[2];
-            out[2] = output;
+        if (std::regex_match(in, matches, orR)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
+            out[2] = matches[3];
             return operations::orGate;
         }
-        if (std::regex_match(first_match, input, lshift)) {
-            out[0] = input[1];
-            out[1] = input[2];
-            out[2] = output;
+        if (std::regex_match(in, matches, lshift)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
+            out[2] = matches[3];
             return operations::leftShift;
         }
-        if (std::regex_match(first_match, input, rshift)) {
-            out[0] = input[1];
-            out[1] = input[2];
-            out[2] = output;
+        if (std::regex_match(in, matches, rshift)) {
+            out[0] = matches[1];
+            out[1] = matches[2];
+            out[2] = matches[3];
             return operations::rightShift;
         }
         std::cout << in << std::endl;

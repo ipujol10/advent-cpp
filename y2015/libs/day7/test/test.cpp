@@ -58,7 +58,8 @@ TEST(CircuitTest, BitShifting) {
 }
 
 TEST(ReadTest, Input) {
-    std::string* out;
+    std::cout << "HERE\n";
+    std::string out[3];
     d7::operations op;
     op = d7::getElements("123 -> x", out);
     EXPECT_EQ(op, d7::operations::set);
@@ -103,4 +104,18 @@ TEST(ReadTest, Input) {
     EXPECT_EQ(op, d7::operations::notGate);
     EXPECT_EQ(out[0], "y");
     EXPECT_EQ(out[1], "i");
+}
+
+TEST(CircuitTest, Pass) {
+    std::string file = "../libs/day7/test/files/test.txt";
+    d7::Circuit c;
+    c.pass(file);
+    EXPECT_EQ(c.get("d"), 72);
+    EXPECT_EQ(c.get("e"), 507);
+    EXPECT_EQ(c.get("f"), 492);
+    EXPECT_EQ(c.get("g"), 114);
+    EXPECT_EQ(c.get("h"), 65412);
+    EXPECT_EQ(c.get("i"), 65079);
+    EXPECT_EQ(c.get("x"), 123);
+    EXPECT_EQ(c.get("y"), 456);
 }

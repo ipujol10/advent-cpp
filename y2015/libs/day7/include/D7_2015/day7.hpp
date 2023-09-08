@@ -24,6 +24,7 @@ namespace d7 {
                 const std::string& out);
         valType get(const std::string& cable);
         void print();
+        void pass(const std::string& file_name);
     };
 
     enum operations {
