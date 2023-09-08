@@ -3,84 +3,143 @@
 #include <regex>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 namespace d7 {
-    Circuit::Circuit() {
-        values["a"] = 0;
-    }
+    Circuit::Circuit() {}
 
-    void Circuit::set(const std::string& out, const std::string& value) {
-        values[out] = getNumericalValue(value);
+    void Circuit::set(valType in, const std::string& out) {
+        values[out] = in;
     }
 
     valType Circuit::get(const std::string& cable) {
         return values[cable];
     }
 
-    void Circuit::andGate(const std::string& a, const std::string& b,
-                const std::string& out) {
-        values[out] = getNumericalValue(a) & getNumericalValue(b);
+    void Circuit::andGate(valType a, valType b, const std::string& out) {
+        values[out] = a & b;
     }
 
-    void Circuit::orGate(const std::string& a, const std::string& b,
-            const std::string& out) {
-        values[out] = getNumericalValue(a) | getNumericalValue(b);
+    void Circuit::orGate(valType a, valType b, const std::string& out) {
+        values[out] = a | b;
     }
 
-    void Circuit::notGate(const std::string& in, const std::string& out) {
-        values[out] = ~values[in];
+    void Circuit::notGate(valType in, const std::string& out) {
+        values[out] = ~in;
     }
 
-    void Circuit::leftShift(const std::string& in, const std::string& shift,
-                const std::string& out) {
-        values[out] = values[in] << getNumericalValue(shift);
+    void Circuit::leftShift(valType in, valType shift, const std::string& out) {
+        values[out] = in << shift;
     }
 
-    void Circuit::rightShift(const std::string& in, const std::string& shift,
-                const std::string& out) {
-        values[out] = values[in] >> getNumericalValue(shift);
+    void Circuit::rightShift(valType in, valType shift, const std::string& out) {
+        values[out] = in >> shift;
     }
 
-    valType Circuit::getNumericalValue(const std::string& in) {
+    void Circuit::pass() {
+        std::string variables[3];
+        operations operation;
+        std::string a, b, out, line;
+        while (!queue.empty()) {
+            line = queue.front();
+            queue.pop();
+            operation = d7::getElements(line, variables);
+            switch (operation) {
+                case d7::set:
+                    a = variables[0];
+                    out = variables[1];
+                    try {
+                        this->set(getNumber(a), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+                case d7::notGate:
+                    a = variables[0];
+                    out = variables[1];
+                    try {
+                        this->notGate(getNumber(a), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+                case d7::andGate:
+                    a = variables[0], b = variables[1];
+                    out = variables[2];
+                    try {
+                        this->andGate(getNumber(a), getNumber(b), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+                case d7::orGate:
+                    a = variables[0], b = variables[1];
+                    out = variables[2];
+                    try {
+                        this->orGate(getNumber(a), getNumber(b), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+                case d7::leftShift:
+                    a = variables[0], b = variables[1];
+                    out = variables[2];
+                    try {
+                        this->leftShift(getNumber(a), getNumber(b), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+                case d7::rightShift:
+                    a = variables[0], b = variables[1];
+                    out = variables[2];
+                    try {
+                        this->rightShift(getNumber(a), getNumber(b), out);
+                    } catch (...) {
+                        queue.push(line);
+                    }
+                    break;
+            }
+        }
+    }
+    
+    void Circuit::readFromFile(const std::string& file_name) {
+        std::string line;
+        std::ifstream file(file_name);
+        while (std::getline(file, line)) {
+            queue.push(line);
+        }
+    }
+
+    void Circuit::override(const std::string& file_name,
+            const std::string& el, valType value) {
+        std::string line;
+        std::ostringstream ss;
+        ss << value;
+        std::regex rgx("^[0-9]+ -> " + el + "$");
+        std::ifstream file(file_name);
+        std::smatch matches;
+        while (std::getline(file, line)) {
+            if (std::regex_match(line, matches, rgx)) {
+                queue.push(ss.str() + " -> " + el);
+            } else {
+                queue.push(line);
+            }
+        }
+    }
+
+    bool Circuit::exists(const std::string& cable) {
+        return values.find(cable) != values.end();
+    }
+
+    valType Circuit::getNumber(const std::string& in) {
         try {
             return (valType)std::stoi(in);
         } catch (...) {
-            return values[in];
-        }
-    }
-
-    void Circuit::print() {
-        for (const auto &pair : values) {
-            std::cout << "{" << pair.first << ": " << pair.second << "}\n";
-        }
-    }
-
-    void Circuit::pass(const std::string& file_name) {
-        std::string line;
-        std::ifstream file(file_name);
-        std::string variables[3];
-        while (std::getline(file, line)) {
-            auto operation = d7::getElements(line, variables);
-            switch (operation) {
-                case d7::operations::set:
-                    this->set(variables[1], variables[0]);
-                    break;
-                case d7::operations::leftShift:
-                    this->leftShift(variables[0], variables[1], variables[2]);
-                    break;
-                case d7::rightShift:
-                    this->rightShift(variables[0], variables[1], variables[2]);
-                    break;
-                case d7::notGate:
-                    this->notGate(variables[0], variables[1]);
-                    break;
-                case d7::andGate:
-                    this->andGate(variables[0], variables[1], variables[2]);
-                    break;
-                case d7::orGate:
-                    this->orGate(variables[0], variables[1], variables[2]);
-                    break;
+            if (exists(in)) {
+                return values[in];
             }
+            throw -2;
         }
     }
 

@@ -3,40 +3,44 @@
 
 #include <map>
 #include <string>
+#include <queue>
+#include <gtest/gtest.h>
 
 namespace d7 {
     typedef unsigned short valType;
     class Circuit {
     private:
         std::map<std::string, valType> values;
-        valType getNumericalValue(const std::string& in);
+        std::queue<std::string> queue;
+        bool exists(const std::string& cable);
     public:
         Circuit();
-        void set(const std::string& out, const std::string& value);
-        void andGate(const std::string& a, const std::string& b,
-                const std::string& out);
-        void leftShift(const std::string& in, const std::string& shift,
-                const std::string& out);
-        void notGate(const std::string& in, const std::string& out);
-        void rightShift(const std::string& in, const std::string& shift,
-                const std::string& out);
-        void orGate(const std::string& a, const std::string& b,
-                const std::string& out);
+        void set(valType in, const std::string& out);
+        void andGate(valType a, valType b, const std::string& out);
+        void leftShift(valType in, valType shift, const std::string& out);
+        void notGate(valType in, const std::string& out);
+        void rightShift(valType in, valType shift, const std::string& out);
+        void orGate(valType a, valType b, const std::string& out);
         valType get(const std::string& cable);
-        void print();
-        void pass(const std::string& file_name);
+        void readFromFile(const std::string& file_name);
+        void override(const std::string& file_name, const std::string& el,
+                valType value);
+        void pass();
+        valType getNumber(const std::string& in);
+        FRIEND_TEST(CircuitTest, ReadFile);
+        FRIEND_TEST(CircuitTest, Exists);
     };
 
     enum operations {
-        andGate,
-        orGate,
+        set,
         notGate,
-        rightShift,
+        orGate,
+        andGate,
         leftShift,
-        set
+        rightShift
     };
 
-    operations getElements(const std::string& in, std::string *out);
+    operations getElements(const std::string& in, std::string* out);
 }
 
 #endif // !DAY7_HPP

@@ -17,4 +17,6 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
     )
 
+target_link_libraries(${LIBRARY_NAME} gtest_main)
+
 add_subdirectory(test)
