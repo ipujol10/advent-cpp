@@ -5,6 +5,8 @@ set(LIBRARY_NAME D7_2015)
 add_library(${LIBRARY_NAME} STATIC
     include/${LIBRARY_NAME}/day7.hpp
     src/day7.cpp
+    include/${LIBRARY_NAME}/improved.hpp
+    src/improved.cpp
     )
 
 target_include_directories(${LIBRARY_NAME} PRIVATE
