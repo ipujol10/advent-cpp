@@ -4,14 +4,14 @@
 #include <iostream>
 
 namespace d7i {
-    BaseGate::BaseGate(const std::string& a,
+    Gate::Gate(const std::string& a,
             const std::string& out): a_name(a), out(out) {
         setA();
     }
 
-    BaseGate::BaseGate() {}
+    Gate::Gate() {}
 
-    void BaseGate::setA() {
+    void Gate::setA() {
         try {
             this->a = (valType)std::stoi(this->a_name);
             this->a_set = true;
@@ -20,25 +20,31 @@ namespace d7i {
         }
     }
 
-    bool BaseGate::getType() {
+    bool Gate::getType() {
         return oneEntry;
     }
 
-    void BaseGate::setA(valType val) {
+    void Gate::setA(valType val) {
         a_set = true;
         a = val;
     }
 
-    std::string BaseGate::getA() {
+    std::string Gate::getA() {
         return a_name;
     }
 
-    std::string BaseGate::getOut() {
+    std::string Gate::getOut() {
         return out;
     }
 
+    std::optional<valType> Gate::execute() { return {}; }
+
+    bool Gate::operator>(const Gate& left) {
+        return this->priority > left.priority;
+    }
+
     ComplexGate::ComplexGate(const std::string& a, const std::string& b,
-            const std::string& out): BaseGate(a, out), b_name(b) {
+            const std::string& out): Gate(a, out), b_name(b) {
         setB();
     }
 
@@ -63,7 +69,7 @@ namespace d7i {
     }
 
     SetGate::SetGate(const std::string& a,
-            const std::string& out): BaseGate(a, out) {
+            const std::string& out): Gate(a, out) {
         priority = 0;
         oneEntry = true;
     }
@@ -79,7 +85,7 @@ namespace d7i {
     }
 
     NotGate::NotGate(const std::string& a,
-            const std::string& out): BaseGate(a, out) {
+            const std::string& out): Gate(a, out) {
         priority = 5;
         oneEntry = true;
     }
@@ -156,5 +162,80 @@ namespace d7i {
             return a >> b;
         }
         return {};
+    }
+
+    MinHeap::MinHeap(): length(0) {
+    }
+
+    void MinHeap::insert(Gate value) {
+        data[length] = &value;
+        heapifyUp(length);
+        length++;
+    }
+
+    Gate* MinHeap::pop() {
+        if (length == 0) {
+            throw -1;
+        }
+        const auto out = data[0];
+        length--;
+        if (length == 0) {
+            return out;
+        }
+
+        data[0] = data[length];
+        heapifyDown(0);
+
+        return out;
+    }
+
+    void MinHeap::heapifyDown(int idx) {
+        int lIdx = leftChild(idx);
+        int rIdx = rightChild(idx);
+
+        if (idx >= length || lIdx >= length) {
+            return;
+        }
+
+        const auto lV = data[lIdx];
+        const auto rV = data[rIdx];
+        const auto v = data[idx];
+
+        if (*lV > *rV && *v > *rV) {
+            data[idx] = rV;
+            data[rIdx] = v;
+            heapifyDown(rIdx);
+        } else if (*rV > *lV && *v > *lV) {
+            data[idx] = lV;
+            data[lIdx] = v;
+            heapifyDown(lIdx);
+        }
+    }
+
+    void MinHeap::heapifyUp(int idx) {
+        if (idx == 0) {
+            return;
+        }
+
+        int p = parent(idx);
+        const auto parentV = data[p];
+        const auto v = data[idx];
+        if (*parentV > *v) {
+            data[idx] = parentV;
+            data[p] = v;
+            heapifyUp(p);
+        }
+    }
+
+    int MinHeap::parent(int idx) {
+        return (idx - 1) / 2;
+    }
+
+    int MinHeap::leftChild(int idx) {
+        return idx * 2 + 1;
+    }
+
+    int MinHeap::rightChild(int idx) {
+        return idx * 2 + 2;
     }
 }

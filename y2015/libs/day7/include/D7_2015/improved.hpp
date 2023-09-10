@@ -9,7 +9,7 @@
 namespace d7i {
     typedef unsigned short valType;
 
-    class BaseGate {
+    class Gate {
     protected:
         int priority;
         std::string a_name;
@@ -19,29 +19,31 @@ namespace d7i {
         void setA();
         bool oneEntry;
     public:
-        BaseGate(const std::string& a, const std::string& out);
-        BaseGate();
+        Gate(const std::string& a, const std::string& out);
+        Gate();
         bool getType();
         void setA(valType val);
         std::string getA();
         std::string getOut();
+        virtual std::optional<valType> execute();
+        bool operator>(const Gate& left);
     };
 
-    class SetGate: public BaseGate {
+    class SetGate: public Gate {
     public:
         SetGate(const std::string& a, const std::string& out);
         SetGate();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
-    class NotGate: public BaseGate {
+    class NotGate: public Gate {
     public:
         NotGate(const std::string& a, const std::string& out);
         NotGate();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
-    class ComplexGate: public BaseGate {
+    class ComplexGate: public Gate {
     protected:
         std::string b_name;
         bool b_set;
@@ -60,7 +62,7 @@ namespace d7i {
         AndGate(const std::string& a, const std::string& b,
                 const std::string& out);
         AndGate();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
     class OrGate: public ComplexGate {
@@ -68,7 +70,7 @@ namespace d7i {
         OrGate(const std::string& a, const std::string& b,
                 const std::string& out);
         OrGate();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
     class LeftShift: public ComplexGate {
@@ -76,7 +78,7 @@ namespace d7i {
         LeftShift(const std::string& a, const std::string& b,
                 const std::string& out);
         LeftShift();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
     class RightShift: public ComplexGate {
@@ -84,34 +86,24 @@ namespace d7i {
         RightShift(const std::string& a, const std::string& b,
                 const std::string& out);
         RightShift();
-        std::optional<valType> execute();
+        std::optional<valType> execute() override;
     };
 
-    union GateUnion {
-        int undefined;
-        SetGate SET;
-        NotGate NOT;
-        AndGate AND;
-        OrGate OR;
-        LeftShift LSHIFT;
-        RightShift RSHIFT;
+    class MinHeap {
+    private:
+        int length;
+        Gate *data[400];
+        void heapifyDown(int idx);
+        void heapifyUp(int idx);
+        int parent(int idx);
+        int leftChild(int idx);
+        int rightChild(int idx);
+    public:
+        MinHeap();
+        void insert(Gate value);
+        Gate* pop();
+        bool isEmpty();
     };
-
-//    class MinHeap {
-//    private:
-//        int length;
-//        Gate data[400];
-//        void heapifyDown(int idx);
-//        void heapifyUp(int idx);
-//        int parent(int idx);
-//        int leftChild(int idx);
-//        int rightChild(int idx);
-//    public:
-//        MinHeap();
-//        void insert(Gate value);
-//        Gate pop();
-//        bool isEmpty();
-//    };
 }
 
 #endif // !IMPROVED_HPP
