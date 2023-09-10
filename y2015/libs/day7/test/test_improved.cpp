@@ -29,3 +29,64 @@ TEST(HeapTest, Create) {
 //    EXPECT_EQ(h.pop(), g);
 //    EXPECT_EQ(h.pop(), i);
 }
+
+TEST(HeapTest, IsEmpty) {
+    d7i::MinHeap h;
+    h.insert(d7i::SetGate{"a", "out0"});
+    h.insert(d7i::AndGate{"b", "c", "out1"});
+    EXPECT_FALSE(h.isEmpty());
+    h.pop();
+    EXPECT_FALSE(h.isEmpty());
+    auto g = h.pop();
+    EXPECT_TRUE(h.isEmpty());
+    h.insert(g);
+    EXPECT_FALSE(h.isEmpty());
+    h.pop();
+    EXPECT_TRUE(h.isEmpty());
+}
+
+namespace d7i {
+TEST(HeapTest, TranslateLine) {
+    MinHeap h;
+    auto g0 = h.translateLine("123 -> x");
+    EXPECT_EQ(g0.a, 123);
+    EXPECT_EQ(g0.out, "x");
+
+    auto g1 = h.translateLine("x AND y -> d");
+    EXPECT_EQ(g1.in_a, "x");
+    EXPECT_EQ(g1.in_b, "y");
+    EXPECT_EQ(g1.out, "d");
+}
+
+TEST(GateTest, Constructor) {
+    SetGate g0("123", "x");
+    EXPECT_TRUE(g0.a_set);
+    EXPECT_EQ(g0.a, 123);
+
+    NotGate g1("x", "h");
+    EXPECT_FALSE(g1.a_set);
+    EXPECT_EQ(g1.in_a, "x");
+    NotGate g2("123", "i");
+    EXPECT_TRUE(g2.a_set);
+
+    AndGate g3("x", "123", "d");
+    EXPECT_TRUE(g3.b_set);
+    EXPECT_FALSE(g3.a_set);
+    EXPECT_EQ(g3.b, 123);
+
+    OrGate g4("x", "123", "d");
+    EXPECT_TRUE(g4.b_set);
+    EXPECT_FALSE(g4.a_set);
+    EXPECT_EQ(g4.b, 123);
+
+    RightShift g5("x", "123", "d");
+    EXPECT_TRUE(g5.b_set);
+    EXPECT_FALSE(g5.a_set);
+    EXPECT_EQ(g5.b, 123);
+
+    LeftShift g6("x", "123", "d");
+    EXPECT_TRUE(g6.b_set);
+    EXPECT_FALSE(g6.a_set);
+    EXPECT_EQ(g6.b, 123);
+}
+}

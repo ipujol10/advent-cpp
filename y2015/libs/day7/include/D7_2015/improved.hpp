@@ -2,6 +2,7 @@
 #define IMPROVED_HPP
 
 #include <string>
+#include <gtest/gtest.h>
 
 namespace d7i {
     typedef unsigned short valType;
@@ -13,11 +14,14 @@ namespace d7i {
         bool a_set;
         valType a;
         const std::string& out;
+        void setA();
     public:
         Gate(const std::string& a, const std::string& out);
         valType execute();
         bool operator>(const Gate& left) const;
         bool operator==(const Gate& left) const;
+        FRIEND_TEST(HeapTest, TranslateLine);
+        FRIEND_TEST(GateTest, Constructor);
     };
 
     class OneEntry: public Gate {
@@ -30,10 +34,12 @@ namespace d7i {
         const std::string& in_b;
         bool b_set;
         valType b;
+        void setB();
     public:
         TwoEntries(const std::string& a, const std::string& b,
                 const std::string& out);
         bool operator==(const Gate& left) const;
+        FRIEND_TEST(GateTest, Constructor);
     };
 
     class SetGate: public OneEntry {
@@ -85,10 +91,16 @@ namespace d7i {
         int parent(int idx);
         int leftChild(int idx);
         int rightChild(int idx);
+        Gate translateLine(const std::string& line);
     public:
         MinHeap();
         void insert(Gate value);
         Gate pop();
+        bool isEmpty();
+        void readFile(const std::string& file_name);
+        void readFile(const std::string& file_name, const std::string& cable,
+                const std::string& value);
+        FRIEND_TEST(HeapTest, TranslateLine);
     };
 }
 

@@ -1,4 +1,6 @@
 #include "D7_2015/improved.hpp"
+#include <regex>
+#include <iostream>
 
 namespace d7i {
     MinHeap::MinHeap(): length(0) {
@@ -83,6 +85,15 @@ namespace d7i {
     Gate::Gate(const std::string& a,
             const std::string& out): in_a(a), out(out) {}
 
+    void Gate::setA() {
+        try {
+            this->a = (valType)std::stoi(this->in_a);
+            this->a_set = true;
+        } catch (...) {
+            this->a_set = false;
+        }
+    }
+
     bool Gate::operator==(const Gate& left) const {
         return this->in_a == left.in_a && this->out == left.out;
     }
@@ -93,33 +104,88 @@ namespace d7i {
     TwoEntries::TwoEntries(const std::string& a, const std::string& b,
                 const std::string& out): Gate(a, out), in_b(b) {}
 
+    void TwoEntries::setB() {
+        try {
+            this->b = (valType)std::stoi(this->in_b);
+            this->b_set = true;
+        } catch (...) {
+            this->b_set = false;
+        }
+    }
+
     SetGate::SetGate(const std::string& a, 
             const std::string& out): OneEntry(a, out) {
         priority = 0;
+        setA();
     }
 
     NotGate::NotGate(const std::string& a, 
             const std::string& out): OneEntry(a, out) {
         priority = 5;
+        setA();
     }
 
     RightShift::RightShift(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 10;
+        setA();
+        setB();
     }
 
     LeftShift::LeftShift(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 10;
+        setA();
+        setB();
     }
 
     AndGate::AndGate(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 15;
+        setA();
+        setB();
     }
 
     OrGate::OrGate(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 15;
+        setA();
+        setB();
+    }
+
+    bool MinHeap::isEmpty() {
+        return length == 0;
+    }
+
+    Gate MinHeap::translateLine(const std::string& line) {
+        std::regex set("^([0-9a-z]+) -> ([a-z]+)$");
+        std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex notR("^NOT ([a-z]+) -> ([a-z]+)$");
+        std::smatch matches;
+
+        if (std::regex_match(line, matches, set)) {
+            return SetGate(matches[1], matches[2]);
+        }
+        if (std::regex_match(line, matches, notR)) {
+            return NotGate(matches[1], matches[2]);
+        }
+        if (std::regex_match(line, matches, andR)) {
+            return AndGate(matches[1], matches[2], matches[3]);
+        }
+        if (std::regex_match(line, matches, orR)) {
+            return OrGate(matches[1], matches[2], matches[3]);
+        }
+        if (std::regex_match(line, matches, lshift)) {
+            return LeftShift(matches[1], matches[2], matches[3]);
+        }
+        if (std::regex_match(line, matches, rshift)) {
+            return RightShift(matches[1], matches[2], matches[3]);
+        }
+        std::cout << line << std::endl;
+        std::cout << "SOMETHING WENT WRONG\n";
+        throw -1;
     }
 }
