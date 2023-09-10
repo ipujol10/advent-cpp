@@ -1,106 +1,62 @@
 #ifndef IMPROVED_HPP
 #define IMPROVED_HPP
 
+#include <optional>
 #include <string>
 #include <gtest/gtest.h>
 
 namespace d7i {
     typedef unsigned short valType;
 
-    class Gate {
+    class BaseGate {
     protected:
-        int priority;
-        const std::string in_a;
-        bool a_set;
+        const std::string a_name;
+        bool set_a;
         valType a;
         const std::string out;
-        void setA();
-        const std::string in_b;
-        bool b_set;
-        valType b;
-        bool executed;
     public:
-        Gate(const std::string& a, const std::string& out);
-        Gate(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-        bool operator>(const Gate& left) const;
-        bool operator==(const Gate& left) const;
-        bool hasBeenExecuted();
-        FRIEND_TEST(HeapTest, TranslateLine);
-        FRIEND_TEST(GateTest, Constructor);
+        BaseGate(const std::string& a, const std::string out);
+        virtual std::optional<valType> execute();
     };
 
-    class TwoEntries: public Gate {
+    class SetGate: public BaseGate {
+    public:
+        std::optional<valType> execute();
+    };
+
+    class NotGate: public BaseGate {
+    public:
+        std::optional<valType> execute();
+    };
+
+    class ComplexGate: public BaseGate {
     protected:
-        void setB();
+        const std::string b_name;
+        bool set_b;
+        valType b;
     public:
-        TwoEntries(const std::string& a, const std::string& b,
+        ComplexGate(const std::string& a, const std::string& b,
                 const std::string& out);
-        bool operator==(const Gate& left) const;
-        FRIEND_TEST(GateTest, Constructor);
     };
 
-    class SetGate: public Gate {
+    class AndGate: public ComplexGate {
     public:
-        SetGate(const std::string& a, const std::string& out);
-        valType execute();
+        std::optional<valType> execute();
     };
 
-    class NotGate: public Gate {
+    class OrGate: public ComplexGate {
     public:
-        NotGate(const std::string& a, const std::string& out);
-        valType execute();
+        std::optional<valType> execute();
     };
 
-    class AndGate: public TwoEntries {
+    class LeftShift: public ComplexGate {
     public:
-        AndGate(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
+        std::optional<valType> execute();
     };
 
-    class OrGate: public TwoEntries {
+    class RightShif: public ComplexGate {
     public:
-        OrGate(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class RightShift: public TwoEntries {
-    public:
-        RightShift(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class LeftShift: public TwoEntries {
-    public:
-        LeftShift(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class MinHeap {
-    private:
-        int length;
-        Gate *data[400];
-        void heapifyDown(int idx);
-        void heapifyUp(int idx);
-        int parent(int idx);
-        int leftChild(int idx);
-        int rightChild(int idx);
-        Gate translateLine(const std::string& line);
-    public:
-        MinHeap();
-        void insert(Gate value);
-        Gate pop();
-        bool isEmpty();
-        void readFile(const std::string& file_name);
-        void readFile(const std::string& file_name, const std::string& cable,
-                const std::string& value);
-        FRIEND_TEST(HeapTest, TranslateLine);
-        FRIEND_TEST(CombineTest, TranslateAndExecute);
+        std::optional<valType> execute();
     };
 }
 
