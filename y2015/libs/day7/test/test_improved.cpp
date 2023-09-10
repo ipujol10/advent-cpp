@@ -58,6 +58,33 @@ TEST(HeapTest, TranslateLine) {
     EXPECT_EQ(g1.out, "d");
 }
 
+TEST(CombineTest, TranslateAndExecute) {
+    MinHeap h;
+    auto g0 = h.translateLine("123 -> x");
+    EXPECT_EQ(g0.execute(), 123);
+    EXPECT_TRUE(g0.hasBeenExecuted());
+
+    auto g1 = h.translateLine("x AND y -> d");
+    EXPECT_EQ(g1.execute(), 0);
+    EXPECT_FALSE(g1.hasBeenExecuted());
+
+    auto g2 = h.translateLine("5 AND 3 -> x");
+    EXPECT_EQ(g2.execute(), 1);
+    EXPECT_TRUE(g2.hasBeenExecuted());
+
+    auto g3 = h.translateLine("5 OR 3 -> x");
+    EXPECT_EQ(g3.execute(), 7);
+
+    auto g4 = h.translateLine("NOT 0 -> x");
+    EXPECT_EQ(g4.execute(), 65535);
+
+    auto g5 = h.translateLine("23 LSHIFT 1 -> x");
+    EXPECT_EQ(g5.execute(), 46);
+
+    auto g6 = h.translateLine("46 RSHIFT 1 -> x");
+    EXPECT_EQ(g6.execute(), 23);
+}
+
 TEST(GateTest, Constructor) {
     SetGate g0("123", "x");
     EXPECT_TRUE(g0.a_set);

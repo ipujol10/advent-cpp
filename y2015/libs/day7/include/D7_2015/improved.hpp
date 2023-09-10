@@ -10,30 +10,29 @@ namespace d7i {
     class Gate {
     protected:
         int priority;
-        const std::string& in_a;
+        const std::string in_a;
         bool a_set;
         valType a;
-        const std::string& out;
+        const std::string out;
         void setA();
+        const std::string in_b;
+        bool b_set;
+        valType b;
+        bool executed;
     public:
         Gate(const std::string& a, const std::string& out);
+        Gate(const std::string& a, const std::string& b,
+                const std::string& out);
         valType execute();
         bool operator>(const Gate& left) const;
         bool operator==(const Gate& left) const;
+        bool hasBeenExecuted();
         FRIEND_TEST(HeapTest, TranslateLine);
         FRIEND_TEST(GateTest, Constructor);
     };
 
-    class OneEntry: public Gate {
-    public:
-        OneEntry(const std::string& a, const std::string& out);
-    };
-
     class TwoEntries: public Gate {
     protected:
-        const std::string& in_b;
-        bool b_set;
-        valType b;
         void setB();
     public:
         TwoEntries(const std::string& a, const std::string& b,
@@ -42,13 +41,13 @@ namespace d7i {
         FRIEND_TEST(GateTest, Constructor);
     };
 
-    class SetGate: public OneEntry {
+    class SetGate: public Gate {
     public:
         SetGate(const std::string& a, const std::string& out);
         valType execute();
     };
 
-    class NotGate: public OneEntry {
+    class NotGate: public Gate {
     public:
         NotGate(const std::string& a, const std::string& out);
         valType execute();
@@ -101,6 +100,7 @@ namespace d7i {
         void readFile(const std::string& file_name, const std::string& cable,
                 const std::string& value);
         FRIEND_TEST(HeapTest, TranslateLine);
+        FRIEND_TEST(CombineTest, TranslateAndExecute);
     };
 }
 

@@ -83,7 +83,18 @@ namespace d7i {
     }
 
     Gate::Gate(const std::string& a,
-            const std::string& out): in_a(a), out(out) {}
+            const std::string& out): in_a(a), out(out), in_b("") {
+        executed = false;
+    }
+
+    Gate::Gate(const std::string& a, const std::string& b,
+            const std::string& out): in_a(a), out(out), in_b(b) {
+        executed = false;
+    }
+
+    bool Gate::hasBeenExecuted() {
+        return executed;
+    }
 
     void Gate::setA() {
         try {
@@ -98,11 +109,8 @@ namespace d7i {
         return this->in_a == left.in_a && this->out == left.out;
     }
 
-    OneEntry::OneEntry(const std::string& a, 
-            const std::string& out): Gate(a, out) {}
-
     TwoEntries::TwoEntries(const std::string& a, const std::string& b,
-                const std::string& out): Gate(a, out), in_b(b) {}
+                const std::string& out): Gate(a, b, out) {}
 
     void TwoEntries::setB() {
         try {
@@ -114,15 +122,33 @@ namespace d7i {
     }
 
     SetGate::SetGate(const std::string& a, 
-            const std::string& out): OneEntry(a, out) {
+            const std::string& out): Gate(a, out) {
         priority = 0;
         setA();
     }
 
+    valType SetGate::execute() {
+        priority++;
+        if (a_set) {
+            executed = true;
+            return a;
+        }
+        return 0;
+    }
+
     NotGate::NotGate(const std::string& a, 
-            const std::string& out): OneEntry(a, out) {
+            const std::string& out): Gate(a, out) {
         priority = 5;
         setA();
+    }
+
+    valType NotGate::execute() {
+        priority++;
+        if (a_set) {
+            executed = true;
+            return a;
+        }
+        return 0;
     }
 
     RightShift::RightShift(const std::string& a, const std::string& b,
@@ -132,11 +158,29 @@ namespace d7i {
         setB();
     }
 
+    valType RightShift::execute() {
+        priority++;
+        if(a_set && b_set) {
+            executed = true;
+            return a >> b;
+        }
+        return 0;
+    }
+
     LeftShift::LeftShift(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 10;
         setA();
         setB();
+    }
+
+    valType LeftShift::execute() {
+        priority++;
+        if(a_set && b_set) {
+            executed = true;
+            return a << b;
+        }
+        return 0;
     }
 
     AndGate::AndGate(const std::string& a, const std::string& b,
@@ -146,12 +190,32 @@ namespace d7i {
         setB();
     }
 
+    valType AndGate::execute() {
+        priority++;
+        if (a_set && b_set) {
+            executed = true;
+            return a & b;
+        }
+        return 0;
+    }
+
     OrGate::OrGate(const std::string& a, const std::string& b,
                 const std::string& out): TwoEntries(a, b, out) {
         priority = 15;
         setA();
         setB();
     }
+
+    valType OrGate::execute() {
+        priority++;
+        if (a_set && b_set) {
+            executed = true;
+            return a | b;
+        }
+        return 0;
+    }
+
+    valType Gate::execute() { return 0; }
 
     bool MinHeap::isEmpty() {
         return length == 0;
@@ -161,9 +225,9 @@ namespace d7i {
         std::regex set("^([0-9a-z]+) -> ([a-z]+)$");
         std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+) -> ([a-z]+)$");
         std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+) -> ([a-z]+)$");
-        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+) -> ([a-z]+)$");
-        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+) -> ([a-z]+)$");
-        std::regex notR("^NOT ([a-z]+) -> ([a-z]+)$");
+        std::regex lshift("^([a-z0-9]+) LSHIFT ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex rshift("^([a-z0-9]+) RSHIFT ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex notR("^NOT ([a-z0-9]+) -> ([a-z]+)$");
         std::smatch matches;
 
         if (std::regex_match(line, matches, set)) {
