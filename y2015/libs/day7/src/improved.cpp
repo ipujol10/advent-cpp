@@ -33,6 +33,10 @@ namespace d7i {
         return a_name;
     }
 
+    void Gate::setB(valType val) {}
+
+    std::string Gate::getB() { return ""; }
+
     std::string Gate::getOut() {
         return out;
     }
@@ -231,19 +235,19 @@ namespace d7i {
         }
     }
 
-    int MinHeap::parent(int idx) {
+    int MinHeap::parent(int idx) const {
         return (idx - 1) / 2;
     }
 
-    int MinHeap::leftChild(int idx) {
+    int MinHeap::leftChild(int idx) const {
         return idx * 2 + 1;
     }
 
-    int MinHeap::rightChild(int idx) {
+    int MinHeap::rightChild(int idx) const {
         return idx * 2 + 2;
     }
 
-    bool MinHeap::isEmpty() {
+    bool MinHeap::isEmpty() const {
         return length == 0;
     }
 }

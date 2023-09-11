@@ -24,6 +24,8 @@ namespace d7i {
         bool getType();
         void setA(valType val);
         std::string getA();
+        virtual void setB(valType val);
+        virtual std::string getB();
         std::string getOut();
         virtual std::optional<valType> execute();
         bool operator>(const Gate& left) const;
@@ -54,8 +56,8 @@ namespace d7i {
         ComplexGate(const std::string& a, const std::string& b,
                 const std::string& out);
         ComplexGate();
-        void setB(valType val);
-        std::string getB();
+        void setB(valType val) override;
+        std::string getB() override;
     };
 
     class AndGate: public ComplexGate {
@@ -96,15 +98,14 @@ namespace d7i {
         Gate data[400];
         void heapifyDown(int idx);
         void heapifyUp(int idx);
-        int parent(int idx);
-        int leftChild(int idx);
-        int rightChild(int idx);
+        int parent(int idx) const;
+        int leftChild(int idx) const;
+        int rightChild(int idx) const;
     public:
         MinHeap();
         void insert(Gate value);
         Gate pop();
-        bool isEmpty();
-        FRIEND_TEST(HeapTest, Create);
+        bool isEmpty() const;
     };
 }
 
