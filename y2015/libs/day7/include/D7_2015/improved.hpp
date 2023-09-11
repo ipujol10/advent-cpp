@@ -26,7 +26,8 @@ namespace d7i {
         std::string getA();
         std::string getOut();
         virtual std::optional<valType> execute();
-        bool operator>(const Gate& left);
+        bool operator>(const Gate& left) const;
+        bool operator>=(const Gate& left) const;
     };
 
     class SetGate: public Gate {
@@ -92,7 +93,7 @@ namespace d7i {
     class MinHeap {
     private:
         int length;
-        Gate *data[400];
+        Gate data[400];
         void heapifyDown(int idx);
         void heapifyUp(int idx);
         int parent(int idx);
@@ -101,8 +102,9 @@ namespace d7i {
     public:
         MinHeap();
         void insert(Gate value);
-        Gate* pop();
+        Gate pop();
         bool isEmpty();
+        FRIEND_TEST(HeapTest, Create);
     };
 }
 

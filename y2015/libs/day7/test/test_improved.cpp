@@ -23,6 +23,7 @@ TEST(GatesTest, Execute) {
     EXPECT_EQ(right.execute().value(), 23);
 }
 
+namespace d7i {
 TEST(HeapTest, Create) {
     d7i::MinHeap h;
     d7i::SetGate a("1", "out0"), 
@@ -45,7 +46,8 @@ TEST(HeapTest, Create) {
 //    auto ga = h.pop();
 //    EXPECT_EQ(ga->getOut(), "out0");
 //    EXPECT_TRUE(ga->execute());
-    for (int x = 0; x < 8; x++) {
-        std::cout << h.pop()->getOut() << std::endl;
+    while (!h.isEmpty()) {
+        std::cout << h.pop().getOut() << std::endl;
     }
+}
 }

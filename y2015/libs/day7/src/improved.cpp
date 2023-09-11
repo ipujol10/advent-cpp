@@ -39,8 +39,12 @@ namespace d7i {
 
     std::optional<valType> Gate::execute() { return {}; }
 
-    bool Gate::operator>(const Gate& left) {
+    bool Gate::operator>(const Gate& left) const {
         return this->priority > left.priority;
+    }
+
+    bool Gate::operator>=(const Gate& left) const {
+        return this->priority >= left.priority;
     }
 
     ComplexGate::ComplexGate(const std::string& a, const std::string& b,
@@ -168,12 +172,12 @@ namespace d7i {
     }
 
     void MinHeap::insert(Gate value) {
-        data[length] = &value;
+        data[length] = value;
         heapifyUp(length);
         length++;
     }
 
-    Gate* MinHeap::pop() {
+    Gate MinHeap::pop() {
         if (length == 0) {
             throw -1;
         }
@@ -197,15 +201,15 @@ namespace d7i {
             return;
         }
 
-        const auto lV = data[lIdx];
-        const auto rV = data[rIdx];
-        const auto v = data[idx];
+        auto lV = data[lIdx];
+        auto rV = data[rIdx];
+        auto v = data[idx];
 
-        if (*lV > *rV && *v > *rV) {
+        if (lV >= rV && v > rV) {
             data[idx] = rV;
             data[rIdx] = v;
             heapifyDown(rIdx);
-        } else if (*rV > *lV && *v > *lV) {
+        } else if (rV >= lV && v > lV) {
             data[idx] = lV;
             data[lIdx] = v;
             heapifyDown(lIdx);
@@ -218,9 +222,9 @@ namespace d7i {
         }
 
         int p = parent(idx);
-        const auto parentV = data[p];
-        const auto v = data[idx];
-        if (*parentV > *v) {
+        auto parentV = data[p];
+        auto v = data[idx];
+        if (parentV > v) {
             data[idx] = parentV;
             data[p] = v;
             heapifyUp(p);
@@ -237,5 +241,9 @@ namespace d7i {
 
     int MinHeap::rightChild(int idx) {
         return idx * 2 + 2;
+    }
+
+    bool MinHeap::isEmpty() {
+        return length == 0;
     }
 }
