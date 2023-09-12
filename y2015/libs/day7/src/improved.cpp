@@ -1,7 +1,9 @@
 #include "D7_2015/improved.hpp"
-#include <cstring>
+#include <fstream>
 #include <regex>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 namespace d7i {
     Gate::Gate(const std::string& a, const std::string& out,
@@ -70,6 +72,11 @@ namespace d7i {
 
     std::string Gate::getA() {
         return a_name;
+    }
+
+    void Gate::setB(valType val) {
+        b_set = true;
+        b = val;
     }
 
     std::string Gate::getB() {
@@ -192,5 +199,109 @@ namespace d7i {
 
     bool MinHeap::isEmpty() const {
         return length == 0;
+    }
+
+    int MinHeap::getLength() {
+        return length;
+    }
+
+    Circuit::Circuit() {}
+
+    void Circuit::getElements(const std::string& in) {
+        std::regex set("^([0-9a-z]+) -> ([a-z]+)$");
+        std::regex andR("^([a-z0-9]+) AND ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex orR("^([a-z0-9]+) OR ([a-z0-9]+) -> ([a-z]+)$");
+        std::regex lshift("^([a-z]+) LSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex rshift("^([a-z]+) RSHIFT ([0-9]+) -> ([a-z]+)$");
+        std::regex notR("^NOT ([a-z]+) -> ([a-z]+)$");
+        std::smatch matches;
+
+        if (std::regex_match(in, matches, set)) {
+            heap.insert({matches[1], matches[2], SetGate});
+        } else if (std::regex_match(in, matches, notR)) {
+            heap.insert({matches[1], matches[2], NotGate});
+        } else if (std::regex_match(in, matches, andR)) {
+            heap.insert({matches[1], matches[2], matches[3], AndGate});
+        } else if (std::regex_match(in, matches, orR)) {
+            heap.insert({matches[1], matches[2], matches[3], OrGate});
+        } else if (std::regex_match(in, matches, lshift)) {
+            heap.insert({matches[1], matches[2], matches[3], LeftShift});
+        } else if (std::regex_match(in, matches, rshift)) {
+            heap.insert({matches[1], matches[2], matches[3], RightShift});
+        } else {
+            std::cout << in << std::endl;
+            std::cout << "SOMETHING WENT WRONG\n";
+        }
+    }
+
+    bool Circuit::exists(const std::string& cable) {
+        return values.find(cable) != values.end();
+    }
+    
+    std::optional<valType> Circuit::getNumber(const std::string& cable) {
+        if (!exists(cable)) return {};
+        return values[cable];
+    }
+
+    void Circuit::readFromFile(const std::string& file_name) {
+        std::string line;
+        std::ifstream file(file_name);
+        while (std::getline(file, line)) {
+            getElements(line);
+        }
+    }
+
+    void Circuit::readFromFile(const std::string& file_name,
+            const std::string& el, valType value) {
+        std::string line;
+        std::ostringstream ss;
+        ss << value;
+        std::regex rgx("^[0-9]+ -> " + el + "$");
+        std::ifstream file(file_name);
+        std::smatch matches;
+        while (std::getline(file, line)) {
+            if (std::regex_match(line, matches, rgx)) {
+                getElements(ss.str() + " -> " + el);
+            } else {
+                getElements(line);
+            }
+        }
+    }
+
+    void Circuit::pass() {
+        std::string a, b, out;
+        Gate gate;
+        while (!heap.isEmpty()) {
+            gate = heap.pop();
+            a = gate.getA();
+            if (exists(a)) {
+                gate.setA(values[a]);
+            }
+            if (!gate.isOneEntry()) {
+                b = gate.getB();
+                if (exists(b)) {
+                    gate.setB(values[b]);
+                }
+            }
+            auto number = gate.execute();
+            if (number) {
+                values[gate.getOut()] = number.value();
+            } else {
+                heap.insert(gate);
+            }
+        }
+    }
+
+    valType Circuit::get(const std::string& cable) {
+        return values[cable];
+    }
+
+    bool Circuit::isNumber(const std::string& in) {
+        try {
+            (valType)std::stoi(in);
+            return true;
+        } catch (...) {
+            return false;
+        }
     }
 }

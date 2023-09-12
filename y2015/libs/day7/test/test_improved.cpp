@@ -59,3 +59,56 @@ TEST(HeapTest, Create) {
         }
     }
 }
+
+TEST(CircuitTest, PassI) {
+    std::string file = "../libs/day7/test/files/test.txt";
+    d7i::Circuit c;
+    c.readFromFile(file);
+    c.pass();
+    EXPECT_EQ(c.get("d"), 72);
+    EXPECT_EQ(c.get("e"), 507);
+    EXPECT_EQ(c.get("f"), 492);
+    EXPECT_EQ(c.get("g"), 114);
+    EXPECT_EQ(c.get("h"), 65412);
+    EXPECT_EQ(c.get("i"), 65079);
+    EXPECT_EQ(c.get("x"), 123);
+    EXPECT_EQ(c.get("y"), 456);
+}
+
+TEST(CircuitTest, PassDelayedSignalI) {
+    std::string file = "../libs/day7/test/files/test2.txt";
+    d7i::Circuit c;
+    c.readFromFile(file);
+    c.pass();
+    EXPECT_EQ(c.get("d"), 72);
+    EXPECT_EQ(c.get("e"), 507);
+    EXPECT_EQ(c.get("f"), 492);
+    EXPECT_EQ(c.get("g"), 114);
+    EXPECT_EQ(c.get("h"), 65412);
+    EXPECT_EQ(c.get("i"), 65079);
+    EXPECT_EQ(c.get("x"), 123);
+    EXPECT_EQ(c.get("y"), 456);
+}
+
+namespace d7i {
+TEST(CircuitTest, GetElements) {
+    Gate g;
+    Circuit c;
+    c.getElements("123 -> x");
+    g = c.heap.pop();
+    EXPECT_EQ(g.execute().value(), 123);
+    EXPECT_EQ(g.getOut(), "x");
+
+    c.getElements("x AND y -> d");
+    g = c.heap.pop();
+    EXPECT_EQ(g.getA(), "x");
+    EXPECT_EQ(g.getB(), "y");
+    EXPECT_EQ(g.getOut(), "d");
+
+    c.getElements("xa OR ya -> ea");
+    g = c.heap.pop();
+    EXPECT_EQ(g.getA(), "xa");
+    EXPECT_EQ(g.getB(), "ya");
+    EXPECT_EQ(g.getOut(), "ea");
+}
+}
