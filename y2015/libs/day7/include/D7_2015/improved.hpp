@@ -1,106 +1,88 @@
 #ifndef IMPROVED_HPP
 #define IMPROVED_HPP
 
+#include "day7.hpp"
+#include <map>
+#include <optional>
 #include <string>
 #include <gtest/gtest.h>
 
 namespace d7i {
     typedef unsigned short valType;
 
+    enum gateType {
+        SetGate,
+        NotGate,
+        AndGate,
+        OrGate,
+        LeftShift,
+        RightShift
+    };
+
     class Gate {
     protected:
         int priority;
-        const std::string& in_a;
+        std::string a_name;
         bool a_set;
         valType a;
-        const std::string& out;
-        void setA();
-    public:
-        Gate(const std::string& a, const std::string& out);
-        valType execute();
-        bool operator>(const Gate& left) const;
-        bool operator==(const Gate& left) const;
-        FRIEND_TEST(HeapTest, TranslateLine);
-        FRIEND_TEST(GateTest, Constructor);
-    };
-
-    class OneEntry: public Gate {
-    public:
-        OneEntry(const std::string& a, const std::string& out);
-    };
-
-    class TwoEntries: public Gate {
-    protected:
-        const std::string& in_b;
+        std::string b_name;
         bool b_set;
         valType b;
+        std::string out;
+        void setA();
         void setB();
+        gateType type;
+        bool oneEntry;
     public:
-        TwoEntries(const std::string& a, const std::string& b,
-                const std::string& out);
-        bool operator==(const Gate& left) const;
-        FRIEND_TEST(GateTest, Constructor);
-    };
-
-    class SetGate: public OneEntry {
-    public:
-        SetGate(const std::string& a, const std::string& out);
-        valType execute();
-    };
-
-    class NotGate: public OneEntry {
-    public:
-        NotGate(const std::string& a, const std::string& out);
-        valType execute();
-    };
-
-    class AndGate: public TwoEntries {
-    public:
-        AndGate(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class OrGate: public TwoEntries {
-    public:
-        OrGate(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class RightShift: public TwoEntries {
-    public:
-        RightShift(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
-    };
-
-    class LeftShift: public TwoEntries {
-    public:
-        LeftShift(const std::string& a, const std::string& b,
-                const std::string& out);
-        valType execute();
+        Gate(const std::string& a, const std::string& out,
+                gateType type);
+        Gate(const std::string& a, const std::string& b,
+                const std::string& out, gateType type);
+        Gate();
+        void setA(valType val);
+        std::string getA();
+        void setB(valType val);
+        std::string getB();
+        std::string getOut();
+        std::optional<valType> execute();
+        bool operator>(const Gate& left) const;
+        bool operator>=(const Gate& left) const;
+        bool isOneEntry();
     };
 
     class MinHeap {
     private:
         int length;
-        Gate *data[400];
+        Gate data[400];
         void heapifyDown(int idx);
         void heapifyUp(int idx);
-        int parent(int idx);
-        int leftChild(int idx);
-        int rightChild(int idx);
-        Gate translateLine(const std::string& line);
+        int parent(int idx) const;
+        int leftChild(int idx) const;
+        int rightChild(int idx) const;
     public:
         MinHeap();
         void insert(Gate value);
         Gate pop();
-        bool isEmpty();
-        void readFile(const std::string& file_name);
-        void readFile(const std::string& file_name, const std::string& cable,
-                const std::string& value);
-        FRIEND_TEST(HeapTest, TranslateLine);
+        bool isEmpty() const;
+        int getLength();
+    };
+
+    class Circuit {
+    private:
+        std::map<std::string, valType> values;
+        MinHeap heap;
+        bool exists(const std::string& cable);
+        void getElements(const std::string& in);
+    public:
+        Circuit();
+        void readFromFile(const std::string& file_name);
+        void readFromFile(const std::string& file_name, const std::string& el,
+                valType value);
+        void pass();
+        std::optional<valType> getNumber(const std::string& cable);
+        valType get(const std::string& cable);
+        bool isNumber(const std::string& in);
+        FRIEND_TEST(CircuitTest, GetElements);
     };
 }
 
