@@ -4,9 +4,41 @@
 #include <iostream>
 
 namespace d7i {
-    Gate::Gate(const std::string& a,
-            const std::string& out): a_name(a), out(out) {
+    Gate::Gate(const std::string& a, const std::string& out,
+            gateType type): a_name(a), out(out), type(type) {
         setA();
+        switch (type) {
+            case SetGate:
+                priority = 0;
+                break;
+            case NotGate:
+                priority = 5;
+                break;
+            default:
+                throw -10;
+                break;
+        }
+    }
+
+    Gate::Gate(const std::string& a,
+            const std::string&b,
+            const std::string& out,
+            gateType type): a_name(a), b_name(b), out(out), type(type) {
+        setA();
+        setB();
+        switch (type) {
+            case LeftShift:
+            case RightShift:
+                priority = 10;
+                break;
+            case AndGate:
+            case OrGate:
+                priority = 15;
+                break;
+            default:
+                throw -10;
+                break;
+        }
     }
 
     Gate::Gate() {}
@@ -20,8 +52,13 @@ namespace d7i {
         }
     }
 
-    bool Gate::getType() {
-        return oneEntry;
+    void Gate::setB() {
+        try {
+            this->b = (valType)std::stoi(this->b_name);
+            this->b_set = true;
+        } catch (...) {
+            this->b_set = false;
+        }
     }
 
     void Gate::setA(valType val) {
@@ -33,9 +70,14 @@ namespace d7i {
         return a_name;
     }
 
-    void Gate::setB(valType val) {}
+    void ComplexGate::setB(valType val) {
+        b_set = true;
+        b = val;
+    }
 
-    std::string Gate::getB() { return ""; }
+    std::string ComplexGate::getB() {
+        return b_name;
+    }
 
     std::string Gate::getOut() {
         return out;
@@ -58,28 +100,10 @@ namespace d7i {
 
     ComplexGate::ComplexGate() {}
 
-    void ComplexGate::setB() {
-        try {
-            this->b = (valType)std::stoi(this->b_name);
-            this->b_set = true;
-        } catch (...) {
-            this->b_set = false;
-        }
-    }
-
-    void ComplexGate::setB(valType val) {
-        b_set = true;
-        b = val;
-    }
-
-    std::string ComplexGate::getB() {
-        return b_name;
-    }
-
     SetGate::SetGate(const std::string& a,
             const std::string& out): Gate(a, out) {
         priority = 0;
-        oneEntry = true;
+        type = true;
     }
 
     SetGate::SetGate() {}
@@ -95,7 +119,7 @@ namespace d7i {
     NotGate::NotGate(const std::string& a,
             const std::string& out): Gate(a, out) {
         priority = 5;
-        oneEntry = true;
+        type = true;
     }
 
     NotGate::NotGate() {}
@@ -111,7 +135,7 @@ namespace d7i {
     AndGate::AndGate(const std::string& a, const std::string& b,
             const std::string& out): ComplexGate(a, b, out) {
         priority = 15;
-        oneEntry = false;
+        type = false;
     }
 
     AndGate::AndGate() {}
@@ -127,7 +151,7 @@ namespace d7i {
     OrGate::OrGate(const std::string& a, const std::string& b,
             const std::string& out): ComplexGate(a, b, out) {
         priority = 15;
-        oneEntry = false;
+        type = false;
     }
 
     OrGate::OrGate() {}
@@ -143,7 +167,7 @@ namespace d7i {
     LeftShift::LeftShift(const std::string& a, const std::string& b,
             const std::string& out): ComplexGate(a, b, out) {
         priority = 10;
-        oneEntry = false;
+        type = false;
     }
 
     LeftShift::LeftShift() {}
@@ -159,7 +183,7 @@ namespace d7i {
     RightShift::RightShift(const std::string& a, const std::string& b,
             const std::string& out): ComplexGate(a, b, out) {
         priority = 10;
-        oneEntry = false;
+        type = false;
     }
 
     RightShift::RightShift() {}

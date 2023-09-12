@@ -9,25 +9,40 @@
 namespace d7i {
     typedef unsigned short valType;
 
+    enum gateType {
+        SetGate,
+        NotGate,
+        AndGate,
+        OrGate,
+        LeftShift,
+        RightShift
+    };
+
     class Gate {
     protected:
         int priority;
         std::string a_name;
         bool a_set;
         valType a;
+        std::string b_name;
+        bool b_set;
+        valType b;
         std::string out;
         void setA();
-        bool oneEntry;
+        void setB();
+        gateType type;
     public:
-        Gate(const std::string& a, const std::string& out);
+        Gate(const std::string& a, const std::string& out,
+                gateType type);
+        Gate(const std::string& a, const std::string& b,
+                const std::string& out, gateType type);
         Gate();
-        bool getType();
         void setA(valType val);
         std::string getA();
-        virtual void setB(valType val);
-        virtual std::string getB();
+        void setB(valType val);
+        std::string getB();
         std::string getOut();
-        virtual std::optional<valType> execute();
+        std::optional<valType> execute();
         bool operator>(const Gate& left) const;
         bool operator>=(const Gate& left) const;
     };
