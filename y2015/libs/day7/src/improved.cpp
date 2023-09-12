@@ -7,6 +7,7 @@ namespace d7i {
     Gate::Gate(const std::string& a, const std::string& out,
             gateType type): a_name(a), out(out), type(type) {
         setA();
+        oneEntry = true;
         switch (type) {
             case SetGate:
                 priority = 0;
@@ -26,6 +27,7 @@ namespace d7i {
             gateType type): a_name(a), b_name(b), out(out), type(type) {
         setA();
         setB();
+        oneEntry = false;
         switch (type) {
             case LeftShift:
             case RightShift:
@@ -70,12 +72,7 @@ namespace d7i {
         return a_name;
     }
 
-    void ComplexGate::setB(valType val) {
-        b_set = true;
-        b = val;
-    }
-
-    std::string ComplexGate::getB() {
+    std::string Gate::getB() {
         return b_name;
     }
 
@@ -83,7 +80,28 @@ namespace d7i {
         return out;
     }
 
-    std::optional<valType> Gate::execute() { return {}; }
+    std::optional<valType> Gate::execute() {
+        priority++;
+        if (oneEntry && !a_set || (!oneEntry && !(a_set && b_set))) {
+            return {};
+        }
+        switch (type) {
+            case SetGate:
+                return a;
+            case NotGate:
+                return ~a;
+            case AndGate:
+                return a & b;
+            case OrGate:
+                return a | b;
+            case LeftShift:
+                return a << b;
+            case RightShift:
+                return a >> b;
+            default:
+                return {};
+        }
+    }
 
     bool Gate::operator>(const Gate& left) const {
         return this->priority > left.priority;
@@ -93,107 +111,8 @@ namespace d7i {
         return this->priority >= left.priority;
     }
 
-    ComplexGate::ComplexGate(const std::string& a, const std::string& b,
-            const std::string& out): Gate(a, out), b_name(b) {
-        setB();
-    }
-
-    ComplexGate::ComplexGate() {}
-
-    SetGate::SetGate(const std::string& a,
-            const std::string& out): Gate(a, out) {
-        priority = 0;
-        type = true;
-    }
-
-    SetGate::SetGate() {}
-
-    std::optional<valType> SetGate::execute() {
-        priority++;
-        if (a_set) {
-            return a;
-        }
-        return {};
-    }
-
-    NotGate::NotGate(const std::string& a,
-            const std::string& out): Gate(a, out) {
-        priority = 5;
-        type = true;
-    }
-
-    NotGate::NotGate() {}
-
-    std::optional<valType> NotGate::execute() {
-        priority++;
-        if (a_set) {
-            return ~a;
-        }
-        return {};
-    }
-
-    AndGate::AndGate(const std::string& a, const std::string& b,
-            const std::string& out): ComplexGate(a, b, out) {
-        priority = 15;
-        type = false;
-    }
-
-    AndGate::AndGate() {}
-
-    std::optional<valType> AndGate::execute() {
-        priority++;
-        if (a_set && b_set) {
-            return a & b;
-        }
-        return {};
-    }
-
-    OrGate::OrGate(const std::string& a, const std::string& b,
-            const std::string& out): ComplexGate(a, b, out) {
-        priority = 15;
-        type = false;
-    }
-
-    OrGate::OrGate() {}
-
-    std::optional<valType> OrGate::execute() {
-        priority++;
-        if (a_set && b_set) {
-            return a | b;
-        }
-        return {};
-    }
-
-    LeftShift::LeftShift(const std::string& a, const std::string& b,
-            const std::string& out): ComplexGate(a, b, out) {
-        priority = 10;
-        type = false;
-    }
-
-    LeftShift::LeftShift() {}
-
-    std::optional<valType> LeftShift::execute() {
-        priority++;
-        if (a_set && b_set) {
-            return a << b;
-        }
-        return {};
-    }
-
-    RightShift::RightShift(const std::string& a, const std::string& b,
-            const std::string& out): ComplexGate(a, b, out) {
-        priority = 10;
-        type = false;
-    }
-
-    RightShift::RightShift() {}
-
-    std::optional<valType> RightShift::execute() {
-        priority++;
-        if (a_set && b_set) {
-            return a >> b;
-        }
-        return {};
+    bool Gate::isOneEntry() {
+        return oneEntry;
     }
 
     MinHeap::MinHeap(): length(0) {
