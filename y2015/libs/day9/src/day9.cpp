@@ -11,9 +11,13 @@ std::string Distances::generateKey(const std::string &pair) {
     std::string cityA, cityB;
     std::regex_match(pair, matches, rgx);
     cityA = matches[1];
-    cities.insert(cityA);
+    if (std::find(cities.begin(), cities.end(), cityA) == cities.end()) {
+        cities.push_back(cityA);
+    }
     cityB = matches[2];
-    cities.insert(cityB);
+    if (std::find(cities.begin(), cities.end(), cityB) == cities.end()) {
+        cities.push_back(cityB);
+    }
     if (cityB < cityA) {
         return cityB + "-" + cityA;
     }
@@ -37,5 +41,32 @@ int Distances::factorial(int n) {
         return 1;
     }
     return n * factorial(n - 1);
+}
+
+void Distances::generatePermutations() {
+    permutationRecursive(cities.size());
+}
+
+void Distances::permutationRecursive(int k) {
+    if (k == 1) {
+        permutations.insert(cities);
+        return;
+    }
+    permutationRecursive(k - 1);
+
+    for (int i = 0; i < k - 1; i++) {
+        if (k%2 == 0) {
+            swap(i, k - 1);
+        } else {
+            swap(0, k - 1);
+        }
+        permutationRecursive(k - 1);
+    }
+}
+
+void Distances::swap(int idxA, int idxB) {
+    const auto a = cities[idxA];
+    cities[idxA] = cities[idxB];
+    cities[idxB] = a;
 }
 }
