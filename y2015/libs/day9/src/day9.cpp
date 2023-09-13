@@ -34,6 +34,7 @@ void Distances::generateDistances(const std::string &file_name) {
         key = matches[1], value = matches[2];
         distances[generateKey(key)] = std::stoi(value);
     }
+    generatePermutations();
 }
 
 int Distances::factorial(int n) {
@@ -68,5 +69,25 @@ void Distances::swap(int idxA, int idxB) {
     const auto a = cities[idxA];
     cities[idxA] = cities[idxB];
     cities[idxB] = a;
+}
+
+int Distances::getTotalDistance(const std::vector<std::string>& path) {
+    int distance = 0;
+    for (int i = 1; i < path.size(); i++) {
+        auto key = generateKey(path[i - 1] + " to " + path[i]);
+        distance += distances[key];
+    }
+    return distance;
+}
+
+int Distances::getShortest() {
+    int distance = -1;
+    for (const auto& path : permutations) {
+        int curr = getTotalDistance(path);
+        if (distance < 0 || curr < distance) {
+            distance = curr;
+        }
+    }
+    return distance;
 }
 }

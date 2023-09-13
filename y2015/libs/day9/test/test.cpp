@@ -18,8 +18,11 @@ TEST(DistancesTest, GenerateDistances) {
     Distances d;
     d.generateDistances(file_name);
     EXPECT_EQ(d.distances, map);
-    std::vector<std::string> cities = {"London", "Dublin", "Belfast"};
-    EXPECT_EQ(d.cities, cities);
+    std::set<std::string> cities = {"London", "Dublin", "Belfast"}, other;
+    for (const auto& city : d.cities) {
+        other.insert(city);
+    }
+    EXPECT_EQ(other, cities);
 }
 
 TEST(DistancesTest, Permutations) {
@@ -34,7 +37,6 @@ TEST(DistancesTest, Permutations) {
     Distances d;
     std::string file_name = "../libs/day9/test/files/test.txt";
     d.generateDistances(file_name);
-    d.generatePermutations();
     EXPECT_EQ(d.permutations, out);
 }
 
@@ -52,5 +54,24 @@ TEST(DistancesTest, Swap) {
     EXPECT_EQ(d.cities, out1);
     d.swap(0, 2);
     EXPECT_EQ(d.cities, out2);
+}
+
+TEST(DistancesTest, TotalDistance) {
+    Distances d;
+    std::string file_name = "../libs/day9/test/files/test.txt";
+    d.generateDistances(file_name);
+    EXPECT_EQ(d.getTotalDistance({"Dublin", "London", "Belfast"}), 982);
+    EXPECT_EQ(d.getTotalDistance({"London", "Dublin", "Belfast"}), 605);
+    EXPECT_EQ(d.getTotalDistance({"London", "Belfast", "Dublin"}), 659);
+    EXPECT_EQ(d.getTotalDistance({"Dublin", "Belfast", "London"}), 659);
+    EXPECT_EQ(d.getTotalDistance({"Belfast", "Dublin", "London"}), 605);
+    EXPECT_EQ(d.getTotalDistance({"Belfast", "London", "Dublin"}), 982);
+}
+
+TEST(DistancesTest, Shortest) {
+    Distances d;
+    std::string file_name = "../libs/day9/test/files/test.txt";
+    d.generateDistances(file_name);
+    EXPECT_EQ(d.getShortest(), 605);
 }
 }
