@@ -1,4 +1,5 @@
 #include "D9_2015/day9.hpp"
+#include <algorithm>
 #include <regex>
 #include <fstream>
 #include <iostream>
@@ -29,5 +30,12 @@ void Distances::generateDistances(const std::string &file_name) {
         key = matches[1], value = matches[2];
         distances[generateKey(key)] = std::stoi(value);
     }
+}
+
+int Distances::factorial(int n) {
+    if (n < 2) {
+        return 1;
+    }
+    return n * factorial(n - 1);
 }
 }

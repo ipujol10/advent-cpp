@@ -21,4 +21,14 @@ TEST(DistancesTest, GenerateDistances) {
     std::set<std::string> cities = {"London", "Dublin", "Belfast"};
     EXPECT_EQ(d.cities, cities);
 }
+
+TEST(DistancesTest, Permutations) {
+    std::set<std::vector<std::string>> out;
+}
+
+TEST(DistancesTest, Factorial) {
+    Distances d;
+    EXPECT_EQ(d.factorial(3), 6);
+    EXPECT_EQ(d.factorial(1), 1);
+}
 }
