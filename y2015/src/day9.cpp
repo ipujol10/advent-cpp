@@ -5,6 +5,7 @@ int main (int argc, char *argv[]) {
     d9::Distances d;
     d.generateDistances(file_name);
     std::cout << "The shortest distance is: " << d.getShortest() << std::endl;
+    std::cout << "The longest distance is: " << d.getLongest() << std::endl;
     
     return 0;
 }

@@ -13,9 +13,10 @@ class Distances {
 private:
     std::map<std::string, int> distances;
     std::vector<std::string> cities;
-    std::set<std::vector<std::string>> permutations;
+    std::map<std::string, int> permutations;
     int factorial(int n);
     std::string generateKey(const std::string& pair);
+    std::string generateKey(const std::vector<std::string>& path);
     void generatePermutations();
     void permutationRecursive(int k);
     void swap(int idxA, int idxB);
@@ -23,7 +24,9 @@ private:
 public:
     void generateDistances(const std::string& file_name);
     int getShortest();
+    int getLongest();
 	FRIEND_TEST(DistancesTest, GenerateKey);
+	FRIEND_TEST(DistancesTest, GenerateKey2);
 	FRIEND_TEST(DistancesTest, GenerateDistances);
 	FRIEND_TEST(DistancesTest, Factorial);
 	FRIEND_TEST(DistancesTest, Permutations);

@@ -9,6 +9,14 @@ TEST(DistancesTest, GenerateKey) {
     EXPECT_EQ(d.generateKey("Dublin to Belfast"), "Belfast-Dublin");
 }
 
+TEST(DistancesTest, GenerateKey2) {
+    Distances d;
+    EXPECT_EQ(
+            d.generateKey({"Dublin", "London", "Belfast"}),
+            "Dublin->London->Belfast"
+            );
+}
+
 TEST(DistancesTest, GenerateDistances) {
     std::map<std::string, int> map = {
         {"Dublin-London", 464},
@@ -26,13 +34,13 @@ TEST(DistancesTest, GenerateDistances) {
 }
 
 TEST(DistancesTest, Permutations) {
-    std::set<std::vector<std::string>> out = {
-        {"Dublin", "London", "Belfast"},
-        {"London", "Dublin", "Belfast"},
-        {"London", "Belfast", "Dublin"},
-        {"Dublin", "Belfast", "London"},
-        {"Belfast", "Dublin", "London"},
-        {"Belfast", "London", "Dublin"},
+    std::map<std::string, int> out = {
+        {"Dublin->London->Belfast", 982},
+        {"London->Dublin->Belfast", 605},
+        {"London->Belfast->Dublin", 659},
+        {"Dublin->Belfast->London", 659},
+        {"Belfast->Dublin->London", 605},
+        {"Belfast->London->Dublin", 982},
     };
     Distances d;
     std::string file_name = "../libs/day9/test/files/test.txt";
@@ -73,5 +81,12 @@ TEST(DistancesTest, Shortest) {
     std::string file_name = "../libs/day9/test/files/test.txt";
     d.generateDistances(file_name);
     EXPECT_EQ(d.getShortest(), 605);
+}
+
+TEST(DistancesTest, Longest) {
+    Distances d;
+    std::string file_name = "../libs/day9/test/files/test.txt";
+    d.generateDistances(file_name);
+    EXPECT_EQ(d.getLongest(), 982);
 }
 }

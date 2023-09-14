@@ -24,6 +24,14 @@ std::string Distances::generateKey(const std::string &pair) {
     return cityA + "-" + cityB;
 }
 
+std::string Distances::generateKey(const std::vector<std::string>& path) {
+    std::string out = path[0];
+    for (int i = 1; i < path.size(); i++) {
+        out += "->" + path[i];
+    }
+    return out;
+}
+
 void Distances::generateDistances(const std::string &file_name) {
     std::regex rgx("^([a-zA-Z]+ to [a-zA-Z]+) = ([0-9]+)$");
     std::smatch matches;
@@ -50,7 +58,7 @@ void Distances::generatePermutations() {
 
 void Distances::permutationRecursive(int k) {
     if (k == 1) {
-        permutations.insert(cities);
+        permutations[generateKey(cities)] = getTotalDistance(cities);
         return;
     }
     permutationRecursive(k - 1);
@@ -83,8 +91,19 @@ int Distances::getTotalDistance(const std::vector<std::string>& path) {
 int Distances::getShortest() {
     int distance = -1;
     for (const auto& path : permutations) {
-        int curr = getTotalDistance(path);
+        int curr = path.second;
         if (distance < 0 || curr < distance) {
+            distance = curr;
+        }
+    }
+    return distance;
+}
+
+int Distances::getLongest() {
+    int distance = 0;
+    for (const auto& path : permutations) {
+        int curr = path.second;
+        if (distance < curr) {
             distance = curr;
         }
     }
