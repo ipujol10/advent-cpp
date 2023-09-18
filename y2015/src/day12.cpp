@@ -8,6 +8,7 @@ int main (int argc, char *argv[]) {
     std::ifstream file(file_name);
     std::getline(file, line);
     std::cout << "Sum: " << d12::sumNumbers(line) << std::endl;
+    std::cout << "Sum: " << d12::sumNumbers(line, "red") << std::endl;
     
     return 0;
 }
