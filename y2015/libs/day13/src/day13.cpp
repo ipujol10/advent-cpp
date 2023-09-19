@@ -1,4 +1,5 @@
 #include "D13_2015/day13.hpp"
+#include <algorithm>
 #include <fstream>
 #include <regex>
 
@@ -18,8 +19,8 @@ Gathering::Gathering(const std::string& file_name) {
         name2 = matches[4];
         sign = matches[2];
         value = matches[3];
-        participants.insert(name1);
-        participants.insert(name2);
+        insert(name1);
+        insert(name2);
         key = {name1, name2};
         int v = std::stoi(value);
         if (sign == "lose") v *= -1;
@@ -29,88 +30,41 @@ Gathering::Gathering(const std::string& file_name) {
             building[key] = v;
         }
     }
-    for (const auto& key : participants) {
-        neighbours[key] = {};
-    }
+    head = *std::min_element(people.begin(), people.end());
 }
 
-Max Gathering::getMax() {
-    auto key = happiness.begin()->first;
-    auto max = happiness.begin()->second;
-    for (const auto& pair : happiness) {
-        if (max < pair.second) {
-            key = pair.first;
-            max = pair.second;
+void Gathering::normalize(std::vector<std::string>& order) {
+    int headIdx = getHead(order);
+    std::vector<std::string> out;
+    for (int i = headIdx; i < order.size(); i++) {
+        if (i == headIdx) continue;
+        out.push_back(order[i]);
+    }
+    for (int i = 0; i < headIdx; i++) {
+        out.push_back(order[i]);
+    }
+    order = {head};
+    if (out[0] > *out.end()) {
+        std::reverse(out.begin(), out.end());
+    }
+    order.emplace_back(out);
+}
+
+int Gathering::getHead(std::vector<std::string>& order) {
+    for (int i = 0; i < order.size(); i++) {
+        if (order[i] == head) {
+            return i;
         }
     }
-    happiness.erase(key);
-    return {max, key};
+    throw -1;
 }
 
-bool Gathering::end() {
-    for (const auto& pair : neighbours) {
-        if (pair.second.size() != 2) {
-            return false;
-        }
+void Gathering::insert(const std::string& name) {
+    if (std::find(people.begin(), people.end(), name) == people.end()) {
+        people.push_back(name);
     }
-    return true;
-}
-
-bool Gathering::addPair(const std::set<std::string>& pair) {
-    std::string them[2];
-    int i = 0;
-    for (const auto& el : pair) {
-        them[i] = el;
-        i++;
-    }
-    if (!addNeighbour(them[0], them[1])) return false;
-    if (!addNeighbour(them[1], them[0])) return false;
-    return true;
-}
-
-void Gathering::removePair(const std::set<std::string>& pair) {
-    std::string them[2];
-    int i = 0;
-    for (const auto& el : pair) {
-        them[i] = el;
-        i++;
-    }
-    neighbours[them[0]].erase(them[1]);
-    neighbours[them[1]].erase(them[0]);
-}
-
-bool Gathering::addNeighbour(
-        const std::string& key, const std::string& value) {
-    auto before = neighbours[key];
-    neighbours[key].insert(value);
-    if (neighbours[key].size() > 2) {
-        neighbours[key] = before;
-        return false;
-    }
-    return true;
 }
 
 std::optional<int> Gathering::sitArround() {
-    if (happiness.empty()) {
-        return {};
-    }
-    if (end()) {
-        return 0;
-    }
-    auto maxPair = getMax();
-    bool validPair = addPair(maxPair.pair);
-    auto next = sitArround();
-    if (next) {
-        int ret = next.value();
-        if (validPair) {
-            ret += maxPair.value;
-        }
-        return ret;
-    }
-    happiness[maxPair.pair] = maxPair.value;
-    if (validPair) {
-        removePair(maxPair.pair);
-    }
-    return {};
 }
 }

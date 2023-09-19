@@ -4,7 +4,6 @@
 int main (int argc, char *argv[]) {
     std::string file_name = "../src/files/day13.txt";
     d13::Gathering g(file_name);
-    std::cout << "Total happiness: " << g.sitArround().value() << std::endl;
     
     return 0;
 }
