@@ -1,7 +1,6 @@
 #include "D13_2015/day13.hpp"
 #include <fstream>
 #include <regex>
-#include <iostream>
 
 namespace d13 {
 Gathering::Gathering(const std::string& file_name) {
@@ -69,6 +68,17 @@ bool Gathering::addPair(const std::set<std::string>& pair) {
     return true;
 }
 
+void Gathering::removePair(const std::set<std::string>& pair) {
+    std::string them[2];
+    int i = 0;
+    for (const auto& el : pair) {
+        them[i] = el;
+        i++;
+    }
+    neighbours[them[0]].erase(them[1]);
+    neighbours[them[1]].erase(them[0]);
+}
+
 bool Gathering::addNeighbour(
         const std::string& key, const std::string& value) {
     auto before = neighbours[key];
@@ -78,5 +88,29 @@ bool Gathering::addNeighbour(
         return false;
     }
     return true;
+}
+
+std::optional<int> Gathering::sitArround() {
+    if (happiness.empty()) {
+        return {};
+    }
+    if (end()) {
+        return 0;
+    }
+    auto maxPair = getMax();
+    bool validPair = addPair(maxPair.pair);
+    auto next = sitArround();
+    if (next) {
+        int ret = next.value();
+        if (validPair) {
+            ret += maxPair.value;
+        }
+        return ret;
+    }
+    happiness[maxPair.pair] = maxPair.value;
+    if (validPair) {
+        removePair(maxPair.pair);
+    }
+    return {};
 }
 }

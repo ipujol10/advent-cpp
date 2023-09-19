@@ -98,5 +98,21 @@ TEST(GatheringTest, AddPair) {
     EXPECT_EQ(g.neighbours, neighbours);
     EXPECT_FALSE(g.addPair({"Alice", "Carol"}));
     EXPECT_EQ(g.neighbours, neighbours);
+    g.removePair({"Alice", "David"});
+    neighbours = {
+        {"Alice", {"Bob"}},
+        {"Bob", {"Alice"}},
+        {"Carol", {}},
+        {"David", {}},
+    };
+    EXPECT_EQ(g.neighbours, neighbours);
+}
+
+TEST(GatheringTest, SitArround) {
+    std::string file_name = "../libs/day13/test/files/test.txt";
+    d13::Gathering g(file_name);
+    auto h = g.sitArround();
+    ASSERT_TRUE(h);
+    EXPECT_EQ(h.value(), 330);
 }
 }
