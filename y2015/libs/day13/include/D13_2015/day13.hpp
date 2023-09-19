@@ -19,10 +19,15 @@ private:
     std::set<std::string> participants;
     std::map<std::string, std::set<std::string>> neighbours;
     Max getMax();
+    bool end();
+    bool addPair(const std::set<std::string>& pair);
+    bool addNeighbour(const std::string& key, const std::string& value);
 public:
     Gathering(const std::string& file);
     FRIEND_TEST(GatheringTest, Constructor);
     FRIEND_TEST(GatheringTest, GetMax);
+    FRIEND_TEST(GatheringTest, End);
+    FRIEND_TEST(GatheringTest, AddPair);
 };
 }
 

@@ -40,5 +40,63 @@ TEST(GatheringTest, GetMax) {
         {{"Carol", "David"}, 96}
     };
     EXPECT_EQ(g.happiness, happiness);
+    tup = g.getMax();
+    EXPECT_EQ(tup.value, 96);
+    tup = g.getMax();
+    EXPECT_EQ(tup.value, 53);
+    tup = g.getMax();
+    EXPECT_EQ(tup.value, 44);
+}
+
+TEST(GatheringTest, End) {
+    std::string file_name = "../libs/day13/test/files/test.txt";
+    d13::Gathering g(file_name);
+    EXPECT_FALSE(g.end());
+    g.neighbours = {
+        {"Alice", {"a", ""}},
+        {"Bob", {"a", ""}},
+        {"Carol", {}},
+        {"David", {}},
+    };
+    EXPECT_FALSE(g.end());
+    g.neighbours = {
+        {"Alice", {"a", ""}},
+        {"Bob", {"a", ""}},
+        {"Carol", {"a", ""}},
+        {"David", {"a"}},
+    };
+    EXPECT_FALSE(g.end());
+    g.neighbours = {
+        {"Alice", {"a", ""}},
+        {"Bob", {"a", ""}},
+        {"Carol", {"a", ""}},
+        {"David", {"a", ""}},
+    };
+    EXPECT_TRUE(g.end());
+}
+
+TEST(GatheringTest, AddPair) {
+    std::string file_name = "../libs/day13/test/files/test.txt";
+    d13::Gathering g(file_name);
+    EXPECT_TRUE(g.addPair({"Alice", "Bob"}));
+    std::map<std::string, std::set<std::string>> neighbours = {
+        {"Alice", {"Bob"}},
+        {"Bob", {"Alice"}},
+        {"Carol", {}},
+        {"David", {}},
+    };
+    EXPECT_EQ(g.neighbours, neighbours);
+    EXPECT_TRUE(g.addPair({"Alice", "Bob"}));
+    EXPECT_EQ(g.neighbours, neighbours);
+    EXPECT_TRUE(g.addPair({"Alice", "David"}));
+    neighbours = {
+        {"Alice", {"Bob", "David"}},
+        {"Bob", {"Alice"}},
+        {"Carol", {}},
+        {"David", {"Alice"}},
+    };
+    EXPECT_EQ(g.neighbours, neighbours);
+    EXPECT_FALSE(g.addPair({"Alice", "Carol"}));
+    EXPECT_EQ(g.neighbours, neighbours);
 }
 }

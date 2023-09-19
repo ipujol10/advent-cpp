@@ -47,4 +47,36 @@ Max Gathering::getMax() {
     happiness.erase(key);
     return {max, key};
 }
+
+bool Gathering::end() {
+    for (const auto& pair : neighbours) {
+        if (pair.second.size() != 2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Gathering::addPair(const std::set<std::string>& pair) {
+    std::string them[2];
+    int i = 0;
+    for (const auto& el : pair) {
+        them[i] = el;
+        i++;
+    }
+    if (!addNeighbour(them[0], them[1])) return false;
+    if (!addNeighbour(them[1], them[0])) return false;
+    return true;
+}
+
+bool Gathering::addNeighbour(
+        const std::string& key, const std::string& value) {
+    auto before = neighbours[key];
+    neighbours[key].insert(value);
+    if (neighbours[key].size() > 2) {
+        neighbours[key] = before;
+        return false;
+    }
+    return true;
+}
 }
