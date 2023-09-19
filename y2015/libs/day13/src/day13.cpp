@@ -30,5 +30,21 @@ Gathering::Gathering(const std::string& file_name) {
             building[key] = v;
         }
     }
+    for (const auto& key : participants) {
+        neighbours[key] = {};
+    }
+}
+
+Max Gathering::getMax() {
+    auto key = happiness.begin()->first;
+    auto max = happiness.begin()->second;
+    for (const auto& pair : happiness) {
+        if (max < pair.second) {
+            key = pair.first;
+            max = pair.second;
+        }
+    }
+    happiness.erase(key);
+    return {max, key};
 }
 }
