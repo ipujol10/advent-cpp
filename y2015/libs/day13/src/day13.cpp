@@ -31,32 +31,18 @@ Gathering::Gathering(const std::string& file_name) {
         }
     }
     head = *std::min_element(people.begin(), people.end());
+    generatePermutations();
 }
 
 void Gathering::normalize(std::vector<std::string>& order) {
-    int headIdx = getHead(order);
-    std::vector<std::string> out;
-    for (int i = headIdx; i < order.size(); i++) {
-        if (i == headIdx) continue;
+    if (order[1] < order.back()) {
+        return;
+    }
+    std::vector<std::string> out = {head};
+    for (int i = order.size() - 1; i > 0; i--) {
         out.push_back(order[i]);
     }
-    for (int i = 0; i < headIdx; i++) {
-        out.push_back(order[i]);
-    }
-    order = {head};
-    if (out[0] > *out.end()) {
-        std::reverse(out.begin(), out.end());
-    }
-    order.emplace_back(out);
-}
-
-int Gathering::getHead(std::vector<std::string>& order) {
-    for (int i = 0; i < order.size(); i++) {
-        if (order[i] == head) {
-            return i;
-        }
-    }
-    throw -1;
+    order = out;
 }
 
 void Gathering::insert(const std::string& name) {
@@ -65,6 +51,70 @@ void Gathering::insert(const std::string& name) {
     }
 }
 
-std::optional<int> Gathering::sitArround() {
+void Gathering::generatePermutations() {
+    generatePermutations(people.size());
+}
+
+void Gathering::generatePermutations(int k) {
+    if (k == 1) {
+        if (people[0] != head) {
+            return;
+        }
+        std::vector<std::string> order = people;
+        normalize(order);
+        if (!existsOrder(order)) {
+            permutations[order] = getHappiness(order);
+        }
+        return;
+    }
+    generatePermutations(k - 1);
+
+    for (int i = 0; i < k - 1; i++) {
+        if (k%2 == 0) {
+            swap(i, k - 1);
+        } else {
+            swap(0, k - 1);
+        }
+        generatePermutations(k - 1);
+    }
+}
+
+bool Gathering::existsOrder(const std::vector<std::string>& order) {
+    return permutations.find(order) != permutations.end();
+}
+
+int Gathering::getHappiness(const std::vector<std::string>& order) {
+    std::set<std::string> pair = {order[0], order.back()};
+    int sum = happiness[pair];
+    for (int i = 0; i < order.size() - 1; i++) {
+        pair = {order[i], order[i + 1]};
+        sum += happiness[pair];
+    }
+    return sum;
+}
+
+void Gathering::swap(int idx1, int idx2) {
+    auto temp = people[idx1];
+    people[idx1] = people[idx2];
+    people[idx2] = temp;
+}
+
+int Gathering::sitArroundMax() {
+    int max = -1;
+    for (const auto& pair : permutations) {
+        if (max == -1 || pair.second > max) {
+            max = pair.second;
+        }
+    }
+    return max;
+}
+
+void Gathering::include(const std::string& name, int value) {
+    permutations.clear();
+    for (const auto& el : people) {
+        happiness[{name, el}] = value;
+    }
+    people.push_back(name);
+    generatePermutations();
 }
 }

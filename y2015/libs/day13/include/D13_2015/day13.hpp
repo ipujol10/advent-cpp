@@ -16,13 +16,19 @@ private:
     std::map<std::vector<std::string>, int> permutations;
     std::string head;
     void normalize(std::vector<std::string>& order);
-    int getHead(std::vector<std::string>& order);
     void insert(const std::string& name);
+    void generatePermutations();
+    void generatePermutations(int k);
+    bool existsOrder(const std::vector<std::string>& order);
+    int getHappiness(const std::vector<std::string>& order);
+    void swap(int idx1, int idx2);
 public:
     Gathering(const std::string& file);
-    std::optional<int> sitArround();
+    void include(const std::string& name, int value);
+    int sitArroundMax();
     FRIEND_TEST(GatheringTest, Constructor);
     FRIEND_TEST(GatheringTest, Normalize);
+    FRIEND_TEST(GatheringTest, GetHappiness);
 };
 }
 

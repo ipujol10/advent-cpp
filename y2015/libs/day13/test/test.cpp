@@ -13,9 +13,7 @@ TEST(GatheringTest, Constructor) {
         {{"Bob", "David"}, -70},
         {{"Carol", "David"}, 96}
     };
-    std::vector<std::string> names = {"Alice", "Bob", "Carol", "David"};
     EXPECT_EQ(g.happiness, happiness);
-    EXPECT_EQ(g.people, names);
     EXPECT_EQ(g.head, "Alice");
 }
 
@@ -26,19 +24,27 @@ TEST(GatheringTest, Normalize) {
     std::vector<std::string> expect = {"Alice", "Bob", "Carol", "David"};
     g.normalize(order);
     EXPECT_EQ(order, expect);
-    order = {"Bob", "Carol", "David", "Alice"};
+    order = {"Alice", "David", "Carol", "Bob"};
     g.normalize(order);
     EXPECT_EQ(order, expect);
-    order = {"David", "Carol", "Bob", "Alice"};
+    expect = {"Alice", "Carol", "Bob", "David"};
+    order = {"Alice", "David", "Bob", "Carol"};
     g.normalize(order);
     EXPECT_EQ(order, expect);
-};
+}
+
+TEST(GatheringTest, GetHappiness) {
+    std::string file_name = "../libs/day13/test/files/test.txt";
+    Gathering g(file_name);
+    std::vector<std::string> order = {"Alice", "Bob", "Carol", "David"};
+    EXPECT_EQ(g.getHappiness(order), 330);
+    order = {"Alice", "David", "Carol", "Bob"};
+    EXPECT_EQ(g.getHappiness(order), 330);
+}
 
 TEST(GatheringTest, SitArround) {
-//    std::string file_name = "../libs/day13/test/files/test.txt";
-//    Gathering g(file_name);
-//    auto h = g.sitArround();
-//    ASSERT_TRUE(h);
-//    EXPECT_EQ(h.value(), 330);
+    std::string file_name = "../libs/day13/test/files/test.txt";
+    Gathering g(file_name);
+    EXPECT_EQ(g.sitArroundMax(), 330);
 }
 }
