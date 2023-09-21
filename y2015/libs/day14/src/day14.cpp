@@ -2,6 +2,7 @@
 #include <regex>
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 namespace d14 {
 Reindeer::Reindeer(const std::string& line) {
@@ -58,25 +59,25 @@ int getWinnigPoints(const std::string &file_name, int time) {
         reindeers.push_back({line});
     }
     for (int i = 1; i <= time; i++) {
-        std::vector<d14::Reindeer> head;
-        int maxDistance = 0;
-        for (const auto& reindeer : reindeers) {
-            int dist = reindeer.distance(i);
-            if (dist >= maxDistance) {
-                if(dist > maxDistance) {
+        int maxDist = 0;
+        std::vector<int> head;
+        for (int k = 0; k < reindeers.size(); k++) {
+            int dist = reindeers[k].distance(i);
+            if (dist >= maxDist) {
+                if (dist > maxDist) {
                     head.clear();
+                    maxDist = dist;
                 }
-                maxDistance = dist;
-                head.push_back(reindeer);
+                head.push_back(k);
             }
         }
-        for (auto& reindeer : head) {
-            reindeer.addPoint();
+        for (int idx : head) {
+            reindeers[idx].addPoint();
         }
     }
     int maxPoints = 0;
-    for (const auto& reindeer : reindeers) {
-        maxPoints = std::max(maxPoints, reindeer.getPoints());
+    for (const auto& el : reindeers) {
+        if (el.getPoints() > maxPoints) maxPoints = el.getPoints();
     }
     return maxPoints;
 }
