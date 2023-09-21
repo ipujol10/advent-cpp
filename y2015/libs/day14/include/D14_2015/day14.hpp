@@ -12,12 +12,17 @@ private:
     int restTime;
     int cycleDistance;
     int cycleTime;
+    int points;
 public:
     Reindeer(const std::string& line);
-    int distance(int time);
+    int distance(int time) const;
+    void addPoint();
+    int getPoints() const;
+    std::string getName() const;
 };
 
 int getWinnigDistance(const std::string& file_name, int time);
+int getWinnigPoints(const std::string& file_name, int time);
 }
 
 #endif // !DAY14_2015

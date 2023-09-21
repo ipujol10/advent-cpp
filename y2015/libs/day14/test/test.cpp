@@ -22,3 +22,8 @@ TEST(FunctionTest, WinningDistance) {
     std::string file = "../libs/day14/test/files/test.txt";
     EXPECT_EQ(d14::getWinnigDistance(file, 1000), 1120);
 }
+
+TEST(FunctionTest, WinningPoints) {
+    std::string file = "../libs/day14/test/files/test.txt";
+    EXPECT_EQ(d14::getWinnigPoints(file, 1000), 689);
+}
