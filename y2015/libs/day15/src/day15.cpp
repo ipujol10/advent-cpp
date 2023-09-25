@@ -36,4 +36,68 @@ int readFile(const std::string &file_name, Ingredient *ingredients) {
     }
     return n;
 }
+
+int getCapacity(const Ingredient *ingredients, int n, int *weights) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += weights[i] * ingredients[i].capacity;
+    }
+    return std::max(0, sum);
+}
+
+int getDurability(const Ingredient *ingredients, int n, int *weights) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += weights[i] * ingredients[i].durability;
+    }
+    return std::max(0, sum);
+}
+
+int getFlavor(const Ingredient *ingredients, int n, int *weights) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += weights[i] * ingredients[i].flavor;
+    }
+    return std::max(0, sum);
+}
+
+int getTexture(const Ingredient *ingredients, int n, int *weights) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += weights[i] * ingredients[i].texture;
+    }
+    return std::max(0, sum);
+}
+
+int getTotalScore(const Ingredient *ingredients, int n, int *weights) {
+    return getCapacity(ingredients, n, weights)
+        * getDurability(ingredients, n, weights)
+        * getFlavor(ingredients, n, weights)
+        * getTexture(ingredients, n, weights);
+}
+
+int bestScore(const Ingredient *ingredients, int n, int *weights, int k) {
+    if (k == 0) {
+        int sumWeights = 0;
+        for (int i = 0; i < n; i++) {
+            sumWeights += weights[i];
+        }
+        if (sumWeights != 100) {
+            return -1;
+        }
+        return getTotalScore(ingredients, n, weights);
+    }
+    int currentWeight = 0;
+    for (int i = k; i < n; i++) {
+        currentWeight += weights[i - 1];
+    }
+    int maxScore = 0;
+    int remainigWeight = 100 - currentWeight;
+    for (int i = 0; i <= remainigWeight; i++) {
+        weights[k - 1] = i;
+        int result = bestScore(ingredients, n, weights, k - 1);
+        maxScore = (result > maxScore) ? result : maxScore;
+    }
+    return maxScore;
+}
 }
