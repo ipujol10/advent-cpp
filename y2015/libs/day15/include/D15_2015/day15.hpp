@@ -25,7 +25,8 @@ int getTexture(const Ingredient* ingredients, int n, int weights[]);
 int getCalories(const Ingredient* ingredients, int n, int weights[]);
 int getTotalScore(const Ingredient* ingredients, int n, int weights[]);
 int bestScore(const Ingredient* ingredients, int n, int weights[], int k);
-void printWeights(const int weights[], int n);
+int bestScoreCalories(
+        const Ingredient* ingredients, int n, int weights[], int k);
 }
 
 #endif // !DAY15_2015

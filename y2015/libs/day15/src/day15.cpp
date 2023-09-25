@@ -1,6 +1,7 @@
 #include "D15_2015/day15.hpp"
 #include <fstream>
 #include <regex>
+#include <iostream>
 
 namespace d15 {
 Ingredient::Ingredient() {}
@@ -88,7 +89,7 @@ int bestScore(const Ingredient *ingredients, int n, int *weights, int k) {
         return getTotalScore(ingredients, n, weights);
     }
     int currentWeight = 0;
-    for (int i = k; i < n; i++) {
+    for (int i = k + 1; i <= n; i++) {
         currentWeight += weights[i - 1];
     }
     int maxScore = 0;
@@ -96,6 +97,40 @@ int bestScore(const Ingredient *ingredients, int n, int *weights, int k) {
     for (int i = 0; i <= remainigWeight; i++) {
         weights[k - 1] = i;
         int result = bestScore(ingredients, n, weights, k - 1);
+        maxScore = (result > maxScore) ? result : maxScore;
+    }
+    return maxScore;
+}
+
+int getCalories(const Ingredient *ingredients, int n, int *weights) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += weights[i] * ingredients[i].calories;
+    }
+    return std::max(0, sum);
+}
+
+int bestScoreCalories(
+        const Ingredient *ingredients, int n, int *weights, int k){
+    if (k == 0) {
+        int sumWeights = 0;
+        for (int i = 0; i < n; i++) {
+            sumWeights += weights[i];
+        }
+        if (sumWeights != 100 || getCalories(ingredients, n, weights) != 500) {
+            return -1;
+        }
+        return getTotalScore(ingredients, n, weights);
+    }
+    int currentWeight = 0;
+    for (int i = k + 1; i <= n; i++) {
+        currentWeight += weights[i - 1];
+    }
+    int maxScore = 0;
+    int remainigWeight = 100 - currentWeight;
+    for (int i = 0; i <= remainigWeight; i++) {
+        weights[k - 1] = i;
+        int result = bestScoreCalories(ingredients, n, weights, k - 1);
         maxScore = (result > maxScore) ? result : maxScore;
     }
     return maxScore;

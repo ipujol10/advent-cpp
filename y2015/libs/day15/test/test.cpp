@@ -36,6 +36,9 @@ TEST(FunctionTest, GetIngredients) {
     weights[0] = 68, weights[1] = 32;
     EXPECT_EQ(d15::getCapacity(ingredients, 2, weights), 0);
     EXPECT_EQ(d15::getTotalScore(ingredients, 2, weights), 0);
+
+    weights[0] = 40, weights[1] = 60;
+    EXPECT_EQ(d15::getTotalScore(ingredients, 2, weights), 57600000);
 }
 
 TEST(FunctionTest, Best) {
@@ -45,4 +48,22 @@ TEST(FunctionTest, Best) {
     int weights[2];
 
     EXPECT_EQ(d15::bestScore(ingredients, n, weights, n), 62842880);
+}
+
+TEST(FunctionTest, Calories) {
+    const std::string file_name = "../libs/day15/test/files/test.txt";
+    d15::Ingredient ingredients[2];
+
+    d15::readFile(file_name, ingredients);
+    int weights[] = {40, 60};
+    EXPECT_EQ(d15::getCalories(ingredients, 2, weights), 500);
+}
+
+TEST(FunctionTest, BestCalories) {
+    const std::string file_name = "../libs/day15/test/files/test.txt";
+    d15::Ingredient ingredients[2];
+    int n = d15::readFile(file_name, ingredients);
+    int weights[2];
+
+    EXPECT_EQ(d15::bestScoreCalories(ingredients, n, weights, n), 57600000);
 }
