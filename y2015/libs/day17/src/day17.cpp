@@ -32,4 +32,39 @@ int getData(const std::string &file_name, int *containers) {
     }
     return n;
 }
+
+int waysMin(int* containers, int n, int goal) {
+    return waysMin(containers, n, goal, 0, 0, 0, n);
+}
+
+int waysMin(int* containers, int n, int goal, int sum, int k,
+        int current, int& min) {
+    if (k >= n || sum > goal || current > min) {
+        return 0;
+    }
+    current++;
+    int newWays = 0;
+    int lastMin = min;
+    for (int i = k; i < n; i++) {
+        int newSum = sum + containers[i];
+        if (newSum == goal) {
+            if (current < min) {
+                min = current;
+                lastMin = min;
+                newWays = 1;
+            } else {
+                newWays++;
+            }
+        } else {
+            int temp = waysMin(containers, n, goal, newSum, i + k,
+                    current, min);
+            if (min < lastMin) {
+                newWays = temp;
+            } else {
+                newWays += temp;
+            }
+        }
+    }
+    return newWays;
+}
 }
