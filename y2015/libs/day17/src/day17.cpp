@@ -7,19 +7,14 @@ int ways(int* containers, int n, int goal) {
 }
 
 int ways(int* containers, int n, int goal, int sum, int k) {
-    if (k >= n || sum > goal) {
+    if (sum == goal) {
+        return 1;
+    }
+    if (k > n || sum > goal) {
         return 0;
     }
-    int newWays = 0;
-    for (int i = k; i < n; i++) {
-        int newSum = sum + containers[i];
-        if (newSum == goal) {
-            newWays++;
-        } else {
-            newWays += ways(containers, n, goal, newSum, i + 1);
-        }
-    }
-    return newWays;
+    return ways(containers, n, goal, sum, k + 1)
+        + ways(containers, n, goal, sum + containers[k], k + 1);
 }
 
 int getData(const std::string &file_name, int *containers) {
@@ -34,12 +29,13 @@ int getData(const std::string &file_name, int *containers) {
 }
 
 int waysMin(int* containers, int n, int goal) {
-    return waysMin(containers, n, goal, 0, 0, 0, n);
+    int min = n;
+    return waysMin(containers, n, goal, 0, 0, 0, min);
 }
 
 int waysMin(int* containers, int n, int goal, int sum, int k,
         int current, int& min) {
-    if (k >= n || sum > goal || current > min) {
+    if (k >= n || sum > goal || current >= min) {
         return 0;
     }
     current++;
@@ -51,17 +47,17 @@ int waysMin(int* containers, int n, int goal, int sum, int k,
             if (current < min) {
                 min = current;
                 lastMin = min;
-                newWays = 1;
-            } else {
-                newWays++;
+                newWays = 0;
             }
+            newWays++;
         } else {
-            int temp = waysMin(containers, n, goal, newSum, i + k,
+            int nextWays = waysMin(containers, n, goal, newSum, i + k,
                     current, min);
             if (min < lastMin) {
-                newWays = temp;
-            } else {
-                newWays += temp;
+                newWays = nextWays;
+                lastMin = min;
+            } else if (min == lastMin) {
+                newWays += nextWays;
             }
         }
     }
