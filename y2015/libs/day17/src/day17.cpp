@@ -35,32 +35,15 @@ int waysMin(int* containers, int n, int goal) {
 
 int waysMin(int* containers, int n, int goal, int sum, int k,
         int current, int& min) {
-    if (k >= n || sum > goal || current >= min) {
+    if (sum == goal) {
+        min = current;
+        return 1;
+    }
+    if (k > n || sum > goal || current >= min) {
         return 0;
     }
-    current++;
-    int newWays = 0;
-    int lastMin = min;
-    for (int i = k; i < n; i++) {
-        int newSum = sum + containers[i];
-        if (newSum == goal) {
-            if (current < min) {
-                min = current;
-                lastMin = min;
-                newWays = 0;
-            }
-            newWays++;
-        } else {
-            int nextWays = waysMin(containers, n, goal, newSum, i + k,
-                    current, min);
-            if (min < lastMin) {
-                newWays = nextWays;
-                lastMin = min;
-            } else if (min == lastMin) {
-                newWays += nextWays;
-            }
-        }
-    }
-    return newWays;
+    return waysMin(containers, n, goal, sum + containers[k], k + 1,
+            current + 1, min)
+        + waysMin(containers, n, goal, sum, k + 1, current, min);
 }
 }
