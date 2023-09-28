@@ -2,7 +2,7 @@
 #include <fstream>
 
 namespace d18 {
-Lights::Lights(const std::string& file_name) {
+Lights::Lights(const std::string& file_name): corners(false){
     std::ifstream file(file_name);
     std::string line;
     SIZE = 0;
@@ -82,6 +82,7 @@ void Lights::step() {
             grid[i][j] = nextGrid[i][j];
         }
     }
+    setCorners(corners);
 }
 
 int Lights::lightsOn() {
@@ -92,5 +93,15 @@ int Lights::lightsOn() {
         }
     }
     return counter;
+}
+
+void Lights::setCorners(bool set) {
+    corners = set;
+    if (set) {
+        grid[0][0] = true;
+        grid[0][SIZE - 1] = true;
+        grid[SIZE - 1][0] = true;
+        grid[SIZE - 1][SIZE - 1] = true;
+    }
 }
 }

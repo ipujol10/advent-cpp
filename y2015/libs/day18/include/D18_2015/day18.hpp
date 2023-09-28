@@ -8,6 +8,7 @@ class Lights {
 private:
     bool grid[100][100];
     size_t SIZE;
+    bool corners;
     int onArround(int i, int j);
     bool switchLight(int i, int j);
     void step();
@@ -16,6 +17,7 @@ public:
     std::string getState();
     void steps(int n = 1);
     int lightsOn();
+    void setCorners(bool set = true);
 };
 }
 
