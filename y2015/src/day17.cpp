@@ -6,7 +6,9 @@ int main (int argc, char *argv[]) {
     int containers[50];
     int n = d17::getData(file_name, containers);
     std::cout << "There are " << d17::ways(containers, n, 150) << " ways\n";
-    std::cout << "There are " << d17::waysMin(containers, n, 150) << " ways\n";
+    int min = d17::getMinContainers(containers, n, 150);
+    std::cout << "There are " << d17::waysMin(containers, n, 150, min)
+        << " ways\n";
     
     return 0;
 }

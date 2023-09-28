@@ -8,5 +8,7 @@ TEST(FunctionTest, Ways) {
 
 TEST(FunctionTest, WaysMin) {
     int containers[] = {20, 15, 10, 5, 5};
-    EXPECT_EQ(d17::waysMin(containers, 5, 25), 3);
+    int min = d17::getMinContainers(containers, 5, 25);
+    EXPECT_EQ(min, 2);
+    EXPECT_EQ(d17::waysMin(containers, 5, 25, min), 3);
 }

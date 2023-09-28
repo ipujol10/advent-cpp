@@ -1,4 +1,5 @@
 #include "D17_2015/day17.hpp"
+#include <algorithm>
 #include <fstream>
 
 namespace d17 {
@@ -28,14 +29,31 @@ int getData(const std::string &file_name, int *containers) {
     return n;
 }
 
-int waysMin(int* containers, int n, int goal) {
-    int min = n;
+int getMinContainers(int* containers, int n, int goal) {
+    return getMinContainers(containers, n, goal, 0, 0, 0);
+}
+
+int getMinContainers(int* containers, int n, int goal, int sum,
+        int k, int current) {
+    if (sum == goal) {
+        return current;
+    }
+    if (sum > goal || k > n) {
+        return n;
+    }
+    return std::min(
+            getMinContainers(containers, n, goal, sum + containers[k],
+                k + 1, current + 1),
+            getMinContainers(containers, n, goal, sum, k + 1, current));
+}
+
+int waysMin(int* containers, int n, int goal, int min) {
     return waysMin(containers, n, goal, 0, 0, 0, min);
 }
 
 int waysMin(int* containers, int n, int goal, int sum, int k,
-        int current, int& min) {
-    if (sum == goal) {
+        int current, int min) {
+    if (sum == goal && current == min) {
         min = current;
         return 1;
     }
