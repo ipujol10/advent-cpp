@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <set>
 
 namespace d19 {
 std::map<std::string, std::vector<std::string>> readData(
@@ -21,6 +22,17 @@ int generate(const std::string& objective,
 int generate(const std::string& objective,
         const std::map<std::string, std::vector<std::string>>& substitutions,
         const std::string& current);
+
+class Generate {
+private:
+    std::map<std::string, std::vector<std::string>> substitutions;
+    std::set<std::string> failed;
+    std::string objective;
+    int generate(const std::string& current);
+public:
+    Generate(const std::string& file_name);
+    int generate();
+};
 }
 
 #endif // !DAY19_2015

@@ -9,8 +9,9 @@ int main (int argc, char *argv[]) {
     std::cout << "Can be created " << d19::numberVariants(map, original)
         << " different molecules\n";
     
+    d19::Generate g(file_name);
     std::cout << "The molecule can be created in " <<
-        d19::generate(original, map) << " steps\n";
+        g.generate() << " steps\n";
 
     return 0;
 }

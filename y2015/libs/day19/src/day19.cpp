@@ -95,4 +95,42 @@ int generate(const std::string &objective, const std::map<std::string,
     }
     return -1;
 }
+
+Generate::Generate(const std::string& file_name) {
+    std::string obj;
+    this->substitutions = readData(file_name, obj);
+    this->objective = obj;
+}
+
+int Generate::generate() {
+    return this->generate("e");
+}
+
+int Generate::generate(const std::string& current) {
+    if (current.length() > objective.length() || failed.count(current) != 0) {
+        return -1;
+    }
+    if (current == objective) {
+        return 0;
+    }
+    for (int i = 0; i < current.length(); i++) {
+        for (const auto& pair : substitutions) {
+            const auto& key = pair.first;
+            if (!match(current, i, key)) {
+                continue;
+            }
+            for (const auto& change : pair.second) {
+                std::string replaced = current;
+                replaced.replace(i, key.length(), change);
+                int iter = generate(replaced);
+                if (iter >= 0) {
+                    return ++iter;
+                }
+                failed.insert(replaced);
+            }
+        }
+    }
+    failed.insert(current);
+    return -1;
+}
 }

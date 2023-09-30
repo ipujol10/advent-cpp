@@ -43,3 +43,11 @@ TEST(FunctionTest, Generate) {
     EXPECT_EQ(d19::generate("HOH", map), 3);
     EXPECT_EQ(d19::generate("HOHOHO", map), 6);
 }
+
+TEST(GenerateTest, Generation) {
+    d19::Generate g1("../libs/day19/test/files/generate1.txt");
+    d19::Generate g2("../libs/day19/test/files/generate2.txt");
+
+    EXPECT_EQ(g1.generate(), 3);
+    EXPECT_EQ(g2.generate(), 6);
+}
