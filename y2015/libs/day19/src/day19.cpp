@@ -1,6 +1,7 @@
 #include "D19_2015/day19.hpp"
 #include <fstream>
 #include <regex>
+#include <set>
 
 namespace d19 {
 std::map<std::string, std::vector<std::string>> readData(
@@ -31,5 +32,34 @@ std::map<std::string, std::vector<std::string>> readData(
         }
     }
     return map;
+}
+
+int numberVariants(
+        const std::map<std::string, std::vector<std::string>> &substitutions,
+        const std::string &original) {
+    std::set<std::string> newMolecules;
+    for (int i = 0; i < original.length(); i++) {
+        for (const auto& pair : substitutions) {
+            auto key = pair.first;
+            if (!match(original, i, key)) {
+                continue;
+            }
+            for (const auto& replace : pair.second) {
+                std::string replaced = original;
+                replaced.replace(i, key.length(), replace);
+                newMolecules.insert(replaced);
+            }
+        }
+    }
+    return newMolecules.size();
+}
+
+bool match(const std::string &input, int idx, const std::string &tmplt) {
+    for (int i = 0; i < tmplt.length(); i++) {
+        if (input[idx + i] != tmplt[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 }
