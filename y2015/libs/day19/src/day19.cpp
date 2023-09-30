@@ -62,4 +62,37 @@ bool match(const std::string &input, int idx, const std::string &tmplt) {
     }
     return true;
 }
+
+int generate(const std::string &objective, const std::map<std::string,
+        std::vector<std::string>> &substitutions) {
+    return generate(objective, substitutions, "e");
+}
+
+int generate(const std::string &objective, const std::map<std::string,
+        std::vector<std::string>> &substitutions,
+        const std::string& current) {
+    if (current.length() > objective.length()) {
+        return -1;
+    }
+    if (current == objective) {
+        return 0;
+    }
+    for (int i = 0; i < current.length(); i++) {
+        for (const auto& pair : substitutions) {
+            const auto& key = pair.first;
+            if (!match(current, i, key)) {
+                continue;
+            }
+            for (const auto& replace : pair.second) {
+                std::string replaced = current;
+                replaced.replace(i, key.length(), replace);
+                int iter = generate(objective, substitutions, replaced);
+                if (iter >= 0) {
+                    return ++iter;
+                }
+            }
+        }
+    }
+    return -1;
+}
 }

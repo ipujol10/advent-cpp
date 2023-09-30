@@ -16,6 +16,11 @@ int numberVariants(
  * @param tmplt the templete where to match against
  */
 bool match(const std::string& input, int idx, const std::string& tmplt);
+int generate(const std::string& objective,
+        const std::map<std::string, std::vector<std::string>>& substitutions);
+int generate(const std::string& objective,
+        const std::map<std::string, std::vector<std::string>>& substitutions,
+        const std::string& current);
 }
 
 #endif // !DAY19_2015

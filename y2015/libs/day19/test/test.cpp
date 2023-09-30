@@ -33,3 +33,13 @@ TEST(FunctionTest, Match) {
     EXPECT_FALSE(d19::match("CRnCaCaCaSiRnBP", 4, "Ca"));
     EXPECT_TRUE(d19::match("CRnCaCaCaSiRnBP", 5, "Ca"));
 }
+
+TEST(FunctionTest, Generate) {
+    std::map<std::string, std::vector<std::string>> map = {
+        {"H", {"HO", "OH"}},
+        {"O", {"HH"}},
+        {"e", {"H", "O"}}
+        };
+    EXPECT_EQ(d19::generate("HOH", map), 3);
+    EXPECT_EQ(d19::generate("HOHOHO", map), 6);
+}
