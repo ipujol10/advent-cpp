@@ -14,19 +14,21 @@ void print(const std::map<int, int>& map) {
 int presentHouse(int num) {
     static std::map<int, int> memoize = {{1, 10}};
     if (memoize.find(num) != memoize.end()) {
+        //print(memoize);
         return memoize[num];
     }
     int result = num * 10 + 10;
-    for (int i = num - 1; i > 1; i--) {
+    for (int i = 2; i < num; i++) {
         if (num % i == 0) {
-            result += i * 10;
-            if (i != num / i) {
-                result += presentHouse(num / i) - 10;
+            result += num / i * 10;
+            if (num / i != i) {
+                result += presentHouse(i) - 10;
             }
             break;
         }
     }
     memoize[num] = result;
+    //print(memoize);
     return result;
 }
 
