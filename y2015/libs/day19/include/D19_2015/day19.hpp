@@ -23,13 +23,17 @@ int generate(const std::string& objective,
         const std::map<std::string, std::vector<std::string>>& substitutions,
         const std::string& current);
 
+struct Subs {
+    std::string from, to;
+};
+
+bool sortAlgorithm(const Subs s1, const Subs s2);
+int exists(const std::string& full, const std::string& snip);
+
 class Generate {
 private:
-    std::map<std::string, std::vector<std::string>> substitutions;
-    std::set<std::string> failed;
-    std::set<std::string> searching;
+    std::vector<Subs> substitutions;
     std::string objective;
-    int generate(const std::string& current);
 public:
     Generate(const std::string& file_name);
     int generate();

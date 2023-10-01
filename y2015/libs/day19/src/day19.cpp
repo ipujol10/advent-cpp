@@ -55,6 +55,9 @@ int numberVariants(
 }
 
 bool match(const std::string &input, int idx, const std::string &tmplt) {
+    if (tmplt.length() + idx > input.length()) {
+        return false;
+    }
     for (int i = 0; i < tmplt.length(); i++) {
         if (input[idx + i] != tmplt[i]) {
             return false;
@@ -98,43 +101,44 @@ int generate(const std::string &objective, const std::map<std::string,
 
 Generate::Generate(const std::string& file_name) {
     std::string obj;
-    this->substitutions = readData(file_name, obj);
+    auto map = readData(file_name, obj);
+    for (const auto& pair : map) {
+        for (const auto& v : pair.second) {
+            this->substitutions.push_back({v, pair.first});
+        }
+    }
+    std::sort(substitutions.begin(), substitutions.end(), sortAlgorithm);
     this->objective = obj;
 }
 
-int Generate::generate() {
-    return this->generate("e");
+bool sortAlgorithm(const Subs s1, const Subs s2) {
+    return s1.from.length() > s2.from.length();
 }
 
-int Generate::generate(const std::string& current) {
-    if (current.length() > objective.length() || failed.count(current) != 0) {
-        return -1;
-    }
-    if (current == objective) {
-        return 0;
-    }
-    searching.insert(current);
-    for (int i = 0; i < current.length(); i++) {
-        for (const auto& pair : substitutions) {
-            const auto& key = pair.first;
-            if (!match(current, i, key)) {
-                continue;
-            }
-            for (const auto& change : pair.second) {
-                std::string replaced = current;
-                replaced.replace(i, key.length(), change);
-                if (searching.find(replaced) != searching.end()) {
-                    continue;
-                }
-                int iter = generate(replaced);
-                if (iter >= 0) {
-                    return ++iter;
-                }
-                failed.insert(replaced);
+int Generate::generate() {
+    std::string variant = objective;
+    int steps = 0;
+    while(variant != "e") {
+        for (const auto& sub : substitutions) {
+            int i = exists(variant, sub.from);
+            if (i >= 0) {
+                variant.replace(i, sub.from.length(), sub.to);
+                steps++;
+                break;
             }
         }
     }
-    failed.insert(current);
+    return steps;
+}
+
+int exists(const std::string &full, const std::string &snip) {
+    for (int i = 0; i < full.length() - snip.length() + 1; i++) {
+        if (full.at(i) == snip.at(0)) {
+            if (match(full, i, snip)) {
+                return i;
+            }
+        }
+    }
     return -1;
 }
 }
