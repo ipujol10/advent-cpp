@@ -132,7 +132,7 @@ int Generate::generate() {
 }
 
 int exists(const std::string &full, const std::string &snip) {
-    for (int i = 0; i < full.length() - snip.length() + 1; i++) {
+    for (int i = 0; i < full.length(); i++) {
         if (full.at(i) == snip.at(0)) {
             if (match(full, i, snip)) {
                 return i;
