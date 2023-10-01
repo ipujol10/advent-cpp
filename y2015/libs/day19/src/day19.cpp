@@ -113,6 +113,7 @@ int Generate::generate(const std::string& current) {
     if (current == objective) {
         return 0;
     }
+    searching.insert(current);
     for (int i = 0; i < current.length(); i++) {
         for (const auto& pair : substitutions) {
             const auto& key = pair.first;
@@ -122,6 +123,9 @@ int Generate::generate(const std::string& current) {
             for (const auto& change : pair.second) {
                 std::string replaced = current;
                 replaced.replace(i, key.length(), change);
+                if (searching.find(replaced) != searching.end()) {
+                    continue;
+                }
                 int iter = generate(replaced);
                 if (iter >= 0) {
                     return ++iter;

@@ -27,6 +27,7 @@ class Generate {
 private:
     std::map<std::string, std::vector<std::string>> substitutions;
     std::set<std::string> failed;
+    std::set<std::string> searching;
     std::string objective;
     int generate(const std::string& current);
 public:
