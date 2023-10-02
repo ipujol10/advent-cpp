@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <vector>
 
 namespace d21 {
 enum class TypeObject {
@@ -26,6 +27,20 @@ struct Shop {
 };
 
 Shop getShop();
+
+class Character {
+private:
+    int hp;
+    int attack;
+    int defense;
+    int coins;
+    int rings;
+public:
+    Character(int hp, int attck, int defense);
+    bool battle(const Character& enemy) const;
+    void clean();
+    void buyObject(const Object& obj, bool ring);
+};
 }
 
 #endif // !DAY21_2015

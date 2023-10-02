@@ -28,3 +28,8 @@ TEST(FunctionTest, GetShop) {
     };
     EXPECT_EQ(d21::getShop(), s);
 }
+
+TEST(CharacterTest, Battle) {
+    d21::Character me(8, 5, 5), enemy(12, 7, 2);
+    EXPECT_TRUE(me.battle(enemy));
+}

@@ -56,8 +56,6 @@ std::ostream& operator<<(std::ostream& os, const Object& obj) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Shop& shop) {
-//    os << "{\n" << shop.weapons << "}\n{" << shop.armor << "}\n{"
-//        << shop.rings << "}\n";
     os << "{Weapons:\n";
     for (const auto& pair : shop.weapons) {
         os << "{" << pair.first << ": " << pair.second << "}\n";
@@ -72,5 +70,16 @@ std::ostream& operator<<(std::ostream& os, const Shop& shop) {
     }
     os << "}\n";
     return os;
+}
+
+Character::Character(int hp, int attack, int defense): hp(hp), attack(attack),
+    defense(defense), coins(0), rings(0) {}
+
+bool Character::battle(const Character& enemy) const {
+    int meDamagePerRound = this->attack - enemy.defense;
+    int enemYDamagePerRound = enemy.attack - this->defense;
+    int meDefeatedIn = this->hp / enemYDamagePerRound;
+    int enemyDefeatedIn = enemy.hp / meDamagePerRound;
+    return meDefeatedIn >= enemyDefeatedIn;
 }
 }
