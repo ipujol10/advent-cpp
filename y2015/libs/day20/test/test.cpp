@@ -2,15 +2,15 @@
 #include <gtest/gtest.h>
 
 TEST(FunctionTest, PresentsHouse) {
-    EXPECT_EQ(d20::presentHouse(1), 10);
-    EXPECT_EQ(d20::presentHouse(2), 30);
-    EXPECT_EQ(d20::presentHouse(3), 40);
-    EXPECT_EQ(d20::presentHouse(4), 70);
-    EXPECT_EQ(d20::presentHouse(5), 60);
-    EXPECT_EQ(d20::presentHouse(6), 120);
-    EXPECT_EQ(d20::presentHouse(7), 80);
-    EXPECT_EQ(d20::presentHouse(8), 150);
-    EXPECT_EQ(d20::presentHouse(9), 130);
+    EXPECT_EQ(d20::presentsHouse(1), 10);
+    EXPECT_EQ(d20::presentsHouse(2), 30);
+    EXPECT_EQ(d20::presentsHouse(3), 40);
+    EXPECT_EQ(d20::presentsHouse(4), 70);
+    EXPECT_EQ(d20::presentsHouse(5), 60);
+    EXPECT_EQ(d20::presentsHouse(6), 120);
+    EXPECT_EQ(d20::presentsHouse(7), 80);
+    EXPECT_EQ(d20::presentsHouse(8), 150);
+    EXPECT_EQ(d20::presentsHouse(9), 130);
 }
 
 TEST(FunctionTest, FirstHouse) {

@@ -1,4 +1,5 @@
 #include "D20_2015/day20.hpp"
+#include <cmath>
 #include <iostream>
 #include <map>
 
@@ -11,30 +12,45 @@ void print(const std::map<int, int>& map) {
     std::cout << "}\n";
 }
 
-int presentHouse(int num) {
-    static std::map<int, int> memoize = {{1, 10}};
-    if (memoize.find(num) != memoize.end()) {
-        //print(memoize);
-        return memoize[num];
-    }
-    int result = num * 10 + 10;
-    for (int i = 2; i < num; i++) {
+int presentsHouse(int num) {
+    int result = 0;
+    for (int i = 1; i <= std::sqrt(num); i++) {
         if (num % i == 0) {
-            result += num / i * 10;
+            result += i;
             if (num / i != i) {
-                result += presentHouse(i) - 10;
+                result += num / i;
             }
-            break;
         }
     }
-    memoize[num] = result;
-    //print(memoize);
-    return result;
+    return result * 10;
+}
+
+int presents50House(int num) {
+    int result = 0;
+    for (int i = 1; i <= std::sqrt(num); i++) {
+        if (num % i == 0) {
+            if (num / i <= 50) {
+                result += i;
+            }
+            if (num / i != i && i <= 50) {
+                result += num / i;
+            }
+        }
+    }
+    return result * 11;
 }
 
 int firstHouse(int presents) {
     int i = 1;
-    while (presentHouse(i) < presents) {
+    while (presentsHouse(i) < presents) {
+        i++;
+    }
+    return i;
+}
+
+int firstHouse2(int presents) {
+    int i = 1;
+    while (presents50House(i) < presents) {
         i++;
     }
     return i;
