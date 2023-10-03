@@ -40,8 +40,8 @@ private:
 public:
     Character(int hp, int attck, int defense);
     bool battle(const Character& enemy) const;
-    void clean();
-    void buyObject(const Object& obj, bool ring);
+    void clear();
+    bool buyObject(const Object& obj);
 };
 }
 

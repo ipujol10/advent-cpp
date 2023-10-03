@@ -91,4 +91,28 @@ bool Character::battle(const Character& enemy) const {
 bool Object::operator<(const Object& left) const {
     return cost < left.cost;
 }
+
+void Character::clear() {
+    attack = 0;
+    defense = 0;
+    coins = 0;
+    rings = 0;
+}
+
+bool Character::buyObject(const Object& obj) {
+    std::regex rgx(R"(\+\d)");
+    if (std::regex_search(obj.name, rgx)) {
+        rings++;
+        if (rings > 2) {
+            return false;
+        }
+    }
+    coins += obj.cost;
+    if (obj.type == TypeObject::attack) {
+        attack += obj.value;
+    } else {
+        defense += obj.value;
+    }
+    return true;
+}
 }

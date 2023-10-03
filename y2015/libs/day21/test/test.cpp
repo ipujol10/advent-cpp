@@ -33,3 +33,13 @@ TEST(CharacterTest, Battle) {
     d21::Character me(8, 5, 5), enemy(12, 7, 2);
     EXPECT_TRUE(me.battle(enemy));
 }
+
+TEST(CharacterTest, BuyObject) {
+    d21::Character me(8, 0, 0), enemy(12, 7, 2);
+    const auto shop = d21::getShop();
+    me.buyObject(shop.weapons.at(1));
+    me.buyObject(shop.armor.at(1));
+    EXPECT_FALSE(me.battle(enemy));
+    me.buyObject(shop.rings.at(4));
+    EXPECT_TRUE(me.battle(enemy));
+}
