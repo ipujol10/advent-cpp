@@ -81,8 +81,11 @@ Character::Character(int hp, int attack, int defense): hp(hp), attack(attack),
     defense(defense), coins(0), rings(0) {}
 
 bool Character::battle(const Character& enemy) const {
-    int meDamagePerRound = this->attack - enemy.defense;
-    int enemYDamagePerRound = enemy.attack - this->defense;
+    if (attack < 1 || enemy.attack < 1) {
+        throw -1;
+    }
+    int meDamagePerRound = std::max(this->attack - enemy.defense, 1);
+    int enemYDamagePerRound = std::max(enemy.attack - this->defense, 1);
     int meDefeatedIn = this->hp / enemYDamagePerRound;
     int enemyDefeatedIn = enemy.hp / meDamagePerRound;
     return meDefeatedIn >= enemyDefeatedIn;
@@ -114,5 +117,35 @@ bool Character::buyObject(const Object& obj) {
         defense += obj.value;
     }
     return true;
+}
+
+int cheapestWin(const std::string &file_name) {
+    std::ifstream file(file_name);
+    std::string line;
+    std::regex rgx(R"(^.+\: (\d+)$)");
+    std::smatch matches;
+    std::vector<int> enemyData;
+    while (std::getline(file, line)) {
+        std::regex_match(line, matches, rgx);
+        enemyData.push_back(std::stoi(matches[1].str()));
+    }
+    Character me(100, 0, 0);
+    Character enemy(enemyData.at(0), enemyData.at(1), enemyData.at(2));
+    const Shop shop = getShop();
+    int i = 0;
+    me.buyObject(shop.weapons.at(0));
+    int weapon = shop.weapons.at(0).cost, armor = 0, ring = 0;
+    while (!me.battle(enemy)) {
+    }
+    return me.cost();
+}
+
+int Character::cost() const {
+    return coins;
+}
+
+std::ostream& operator<<(std::ostream& os, const Character& ch) {
+    os << ch.hp << " - " << ch.attack << " - " << ch.defense << std::endl;
+    return os;
 }
 }

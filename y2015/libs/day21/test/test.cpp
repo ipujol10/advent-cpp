@@ -32,6 +32,8 @@ TEST(FunctionTest, GetShop) {
 TEST(CharacterTest, Battle) {
     d21::Character me(8, 5, 5), enemy(12, 7, 2);
     EXPECT_TRUE(me.battle(enemy));
+    me = {8, 0, 0};
+    EXPECT_THROW(me.battle(enemy), int);
 }
 
 TEST(CharacterTest, BuyObject) {

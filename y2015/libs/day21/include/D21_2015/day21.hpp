@@ -42,7 +42,11 @@ public:
     bool battle(const Character& enemy) const;
     void clear();
     bool buyObject(const Object& obj);
+    int cost() const;
+    friend std::ostream& operator<<(std::ostream& os, const Character& ch);
 };
+
+int cheapestWin(const std::string& file_name);
 }
 
 #endif // !DAY21_2015
