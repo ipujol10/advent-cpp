@@ -13,15 +13,17 @@ enum class TypeObject {
 };
 
 struct Object {
+    std::string name;
     int cost;
     int value;
     TypeObject type;
     bool operator==(const Object& left) const;
+    bool operator<(const Object& left) const;
     friend std::ostream& operator<<(std::ostream& os, const Object& obj);
 };
 
 struct Shop {
-    std::map<std::string, Object> weapons, armor, rings;
+    std::vector<Object> weapons, armor, rings;
     bool operator==(const Shop& left) const;
     friend std::ostream& operator<<(std::ostream& os, const Shop& shop);
 };

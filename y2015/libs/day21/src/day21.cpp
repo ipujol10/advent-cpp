@@ -1,4 +1,5 @@
 #include "D21_2015/day21.hpp"
+#include <algorithm>
 #include <regex>
 #include <fstream>
 
@@ -17,25 +18,28 @@ Shop getShop() {
             continue;
         }
         if (std::regex_match(line, matches, object)) {
+            const std::string name = matches[1];
             int price = std::stoi(matches[2]);
             int attack = std::stoi(matches[3]);
             int defense = std::stoi(matches[4]);
             Object o;
             if (attack == 0) {
-                o = {price, defense, TypeObject::defense};
+                o = {name, price, defense, TypeObject::defense};
             } else {
-                o = {price, attack, TypeObject::attack};
+                o = {name, price, attack, TypeObject::attack};
             }
-            const std::string name = matches[1];
             if (type == "Weapons") {
-                shop.weapons[name] = o;
+                shop.weapons.push_back(o);
             } else if (type == "Armor") {
-                shop.armor[name] = o;
+                shop.armor.push_back(o);
             } else {
-                shop.rings[name] = o;
+                shop.rings.push_back(o);
             }
         }
     }
+    std::sort(shop.weapons.begin(), shop.weapons.end());
+    std::sort(shop.armor.begin(), shop.armor.end());
+    std::sort(shop.rings.begin(), shop.rings.end());
     return shop;
 }
 
@@ -49,24 +53,25 @@ bool Shop::operator==(const Shop& left) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Object& obj) {
-    const std::string type = (obj.type == TypeObject::attack) ? "Attack}" :
-        "Defense}";
-    os << "{" << obj.cost << " - " << obj.value << " - " << type;
+    const std::string type = (obj.type == TypeObject::attack) ? "Attack}\n" :
+        "Defense}\n";
+    os << "{" << obj.name << " - " << obj.cost << " - " << obj.value
+        << " - " << type;
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const Shop& shop) {
     os << "{Weapons:\n";
-    for (const auto& pair : shop.weapons) {
-        os << "{" << pair.first << ": " << pair.second << "}\n";
+    for (const auto& obj : shop.weapons) {
+        os << obj;
     }
     os << "}\n{Armor:\n";
-    for (const auto& pair : shop.armor) {
-        os << "{" << pair.first << ": " << pair.second << "}\n";
+    for (const auto& obj : shop.armor) {
+        os << obj;
     }
     os << "}\n{Rings:\n";
-    for (const auto& pair : shop.rings) {
-        os << "{" << pair.first << ": " << pair.second << "}\n";
+    for (const auto& obj : shop.rings) {
+        os << obj;
     }
     os << "}\n";
     return os;
@@ -81,5 +86,9 @@ bool Character::battle(const Character& enemy) const {
     int meDefeatedIn = this->hp / enemYDamagePerRound;
     int enemyDefeatedIn = enemy.hp / meDamagePerRound;
     return meDefeatedIn >= enemyDefeatedIn;
+}
+
+bool Object::operator<(const Object& left) const {
+    return cost < left.cost;
 }
 }
