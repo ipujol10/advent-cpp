@@ -49,3 +49,6 @@ build*/
 
 # Cache
 .cache/
+
+# NVIM cmake folders
+out/
