@@ -2,10 +2,12 @@
 #include <algorithm>
 #include <regex>
 #include <fstream>
+#include <utils/root.hpp>
 
 namespace d21 {
 Shop getShop() {
-    const std::string file_name("../libs/day21/src/files/shop.txt");
+    const auto root = utils::getRootFolder();
+    const std::string file_name(root + "libs/day21/src/files/shop.txt");
     std::regex header(R"(^(\w+):\s+\w+\s+\w+\s+\w+$)");
     std::regex object(R"(^(\w+(?:\s\+\d)?)\s+(\d+)\s+(\d)\s+(\d)\s*$)");
     std::fstream file(file_name, std::ios::in);

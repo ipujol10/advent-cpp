@@ -1,10 +1,10 @@
-project(Day21_2015)
+project(Utils)
 
-set(LIBRARY_NAME D21_2015)
+set(LIBRARY_NAME utils)
 
 add_library(${LIBRARY_NAME} STATIC
-    include/${LIBRARY_NAME}/day21.hpp
-    src/day21.cpp
+    include/${LIBRARY_NAME}/root.hpp
+    src/root.cpp
     )
 
 target_include_directories(${LIBRARY_NAME} PRIVATE
@@ -16,7 +16,5 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     )
-
-target_link_libraries(${LIBRARY_NAME} utils)
 
 add_subdirectory(test)
