@@ -47,6 +47,8 @@ public:
 };
 
 int cheapestWin(const std::string& file_name);
+std::vector<Object> nextBuy(const Shop& shop, int last_cost);
+int costObjects(const std::vector<Object> objects);
 }
 
 #endif // !DAY21_2015

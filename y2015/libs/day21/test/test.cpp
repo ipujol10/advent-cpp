@@ -45,3 +45,14 @@ TEST(CharacterTest, BuyObject) {
     me.buyObject(shop.rings.at(4));
     EXPECT_TRUE(me.battle(enemy));
 }
+
+TEST(FunctionTest, CostObjects) {
+    d21::Shop shop = d21::getShop();
+    EXPECT_EQ(d21::costObjects({}), 0);
+    EXPECT_EQ(d21::costObjects({shop.weapons.at(0)}), 8);
+    EXPECT_EQ(d21::costObjects({
+                shop.weapons.at(2),
+                shop.armor.at(1),
+                shop.rings.at(5)}),
+            156);
+}
