@@ -131,11 +131,15 @@ int cheapestWin(const std::string &file_name) {
   Character me(100, 0, 0);
   Character enemy(enemyData.at(0), enemyData.at(1), enemyData.at(2));
   const Shop shop = getShop();
+  const auto combinations = orderedCombinations(shop);
   int i = 0;
-  me.buyObject(shop.weapons.at(0));
-  int weapon = shop.weapons.at(0).cost, armor = 0, ring = 0;
-  while (!me.battle(enemy)) {
-  }
+  do {
+      me.clear();
+      for (const Object& obj : combinations.at(i)) {
+          me.buyObject(obj);
+      }
+      i++;
+  } while(!me.battle(enemy) && i < combinations.size());
   return me.cost();
 }
 
@@ -162,9 +166,30 @@ int costObjects(const std::vector<Object> objects) {
 
 std::vector<std::vector<Object>> orderedCombinations(const Shop &shop) {
     std::vector<std::vector<Object>> combinations;
+    const auto pairs = ringPairs(shop);
     for (const Object& weapon : shop.weapons) {
         combinations.push_back({weapon});
+        for (const Object& armor : shop.armor) {
+            combinations.push_back({weapon, armor});
+            for (const Object& ring : shop.rings) {
+                combinations.push_back({weapon, armor, ring});
+            }
+            for (const auto& pair : pairs) {
+                std::vector<Object> vect = {weapon, armor};
+                vect.emplace_back(pair);
+                combinations.push_back(vect);
+            }
+        }
+        for (const Object& ring : shop.rings) {
+            combinations.push_back({weapon, ring});
+        }
+        for (const auto& pair : pairs) {
+            std::vector<Object> vect{weapon};
+            vect.emplace_back(pair);
+            combinations.push_back(vect);
+        }
     }
+    std::sort(combinations.begin(), combinations.end(), comparePacks);
     return combinations;
 }
 
@@ -177,5 +202,9 @@ std::vector<std::vector<Object>> ringPairs(const Shop &shop) {
         }
     }
     return pairs;
+}
+
+bool comparePacks(const std::vector<Object>& v1, const std::vector<Object>& v2){
+    return costObjects(v1) < costObjects(v2);
 }
 } // namespace d21

@@ -51,6 +51,7 @@ std::vector<Object> nextBuy(const Shop& shop, int last_cost);
 int costObjects(const std::vector<Object> objects);
 std::vector<std::vector<Object>> orderedCombinations(const Shop& shop);
 std::vector<std::vector<Object>> ringPairs(const Shop& shop);
+bool comparePacks(const std::vector<Object>& v1, const std::vector<Object>& v2);
 }
 
 #endif // !DAY21_2015
