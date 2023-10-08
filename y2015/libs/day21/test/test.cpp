@@ -56,3 +56,25 @@ TEST(FunctionTest, CostObjects) {
                 shop.rings.at(5)}),
             156);
 }
+
+TEST(FunctionTest, RingsPairs) {
+    const d21::Shop shop = d21::getShop();
+    std::vector<std::vector<d21::Object>> pairs = {
+        {shop.rings.at(0), shop.rings.at(1)},
+        {shop.rings.at(0), shop.rings.at(2)},
+        {shop.rings.at(0), shop.rings.at(3)},
+        {shop.rings.at(0), shop.rings.at(4)},
+        {shop.rings.at(0), shop.rings.at(5)},
+        {shop.rings.at(1), shop.rings.at(2)},
+        {shop.rings.at(1), shop.rings.at(3)},
+        {shop.rings.at(1), shop.rings.at(4)},
+        {shop.rings.at(1), shop.rings.at(5)},
+        {shop.rings.at(2), shop.rings.at(3)},
+        {shop.rings.at(2), shop.rings.at(4)},
+        {shop.rings.at(2), shop.rings.at(5)},
+        {shop.rings.at(3), shop.rings.at(4)},
+        {shop.rings.at(3), shop.rings.at(5)},
+        {shop.rings.at(4), shop.rings.at(5)},
+    };
+    EXPECT_EQ(d21::ringPairs(shop), pairs);
+}

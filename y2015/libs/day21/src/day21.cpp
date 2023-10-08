@@ -159,4 +159,23 @@ int costObjects(const std::vector<Object> objects) {
   }
   return cost;
 }
+
+std::vector<std::vector<Object>> orderedCombinations(const Shop &shop) {
+    std::vector<std::vector<Object>> combinations;
+    for (const Object& weapon : shop.weapons) {
+        combinations.push_back({weapon});
+    }
+    return combinations;
+}
+
+std::vector<std::vector<Object>> ringPairs(const Shop &shop) {
+    std::vector<std::vector<Object>> pairs;
+    int n = shop.rings.size();
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            pairs.push_back({shop.rings.at(i), shop.rings.at(j)});
+        }
+    }
+    return pairs;
+}
 } // namespace d21
