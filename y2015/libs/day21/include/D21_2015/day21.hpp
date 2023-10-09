@@ -47,6 +47,7 @@ public:
 };
 
 int cheapestWin(const std::string& file_name);
+int expensiveLost(const std::string& file_name);
 std::vector<Object> nextBuy(const Shop& shop, int last_cost);
 int costObjects(const std::vector<Object> objects);
 std::vector<std::vector<Object>> orderedCombinations(const Shop& shop);

@@ -149,6 +149,32 @@ int cheapestWin(const std::string &file_name) {
   return me.cost();
 }
 
+int expensiveLost(const std::string& file_name) {
+  std::ifstream file(file_name);
+  std::string line;
+  std::regex rgx(R"(^.+\: (\d+)$)");
+  std::smatch matches;
+  std::vector<int> enemyData;
+  while (std::getline(file, line)) {
+    std::regex_match(line, matches, rgx);
+    enemyData.push_back(std::stoi(matches[1].str()));
+  }
+  Character me(100, 0, 0);
+  Character enemy(enemyData.at(0), enemyData.at(1), enemyData.at(2));
+  const Shop shop = getShop();
+  const auto combinations = orderedCombinations(shop);
+  for (int i = combinations.size() - 1; i >= 0; i--) {
+      me.clear();
+      for (const Object& obj : combinations.at(i)) {
+          me.buyObject(obj);
+      }
+      if (!me.battle(enemy)) {
+          return costObjects(combinations.at(i));
+      }
+  }
+  throw -1;
+}
+
 int Character::cost() const { return coins; }
 
 std::ostream &operator<<(std::ostream &os, const Character &ch) {
