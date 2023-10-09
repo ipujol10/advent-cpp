@@ -3,8 +3,8 @@
 #include <fstream>
 
 namespace d23 {
-Computer::Computer(const std::string& file_name): line(0) {
-    registers[0] = 0, registers[1] = 0;
+Computer::Computer(const std::string& file_name) {
+    resset();
     
     std::ifstream file(file_name);
     std::string line;
@@ -69,15 +69,16 @@ int Computer::getRegisterValue(int reg) const {
 }
 
 void Computer::pass() {
+    resset();
     while (this->line < this->length) {
         const auto instruction = main[line];
         int reg = instruction.reg;
-        switch (instruction.type) {
+       switch (instruction.type) {
             case TypeInstruction::half:
                 registers[reg] /= 2;
                 break;
             case TypeInstruction::triple:
-                registers[reg] += 3;
+                registers[reg] *= 3;
                 break;
             case TypeInstruction::increment:
                 registers[reg]++;
@@ -92,7 +93,7 @@ void Computer::pass() {
                 }
                 break;
             case TypeInstruction::jumpOdd:
-                if (registers[reg] % 2 != 0) {
+                if (registers[reg] == 1) {
                     line += instruction.value;
                     continue;
                 }
@@ -100,5 +101,10 @@ void Computer::pass() {
         }
         line++;
     }
+}
+
+void Computer::resset() {
+    registers[0] = 0, registers[1] = 0;
+    line = 0;
 }
 }
