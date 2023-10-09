@@ -88,7 +88,13 @@ bool Character::battle(const Character &enemy) const {
   int meDamagePerRound = std::max(this->attack - enemy.defense, 1);
   int enemYDamagePerRound = std::max(enemy.attack - this->defense, 1);
   int meDefeatedIn = this->hp / enemYDamagePerRound;
+  if (this->hp % enemYDamagePerRound != 0) {
+      meDefeatedIn++;
+  }
   int enemyDefeatedIn = enemy.hp / meDamagePerRound;
+  if (enemy.hp % meDamagePerRound != 0) {
+      enemyDefeatedIn++;
+  }
   return meDefeatedIn >= enemyDefeatedIn;
 }
 
@@ -176,7 +182,8 @@ std::vector<std::vector<Object>> orderedCombinations(const Shop &shop) {
             }
             for (const auto& pair : pairs) {
                 std::vector<Object> vect = {weapon, armor};
-                vect.emplace_back(pair);
+                vect.push_back(pair.at(0));
+                vect.push_back(pair.at(1));
                 combinations.push_back(vect);
             }
         }
@@ -185,7 +192,8 @@ std::vector<std::vector<Object>> orderedCombinations(const Shop &shop) {
         }
         for (const auto& pair : pairs) {
             std::vector<Object> vect{weapon};
-            vect.emplace_back(pair);
+            vect.push_back(pair.at(0));
+            vect.push_back(pair.at(1));
             combinations.push_back(vect);
         }
     }
@@ -206,5 +214,36 @@ std::vector<std::vector<Object>> ringPairs(const Shop &shop) {
 
 bool comparePacks(const std::vector<Object>& v1, const std::vector<Object>& v2){
     return costObjects(v1) < costObjects(v2);
+}
+
+void printOrder(const std::vector<std::vector<Object>> &order) {
+    std::cout << "{\n";
+    for (const auto& pack : order) {
+        std::cout << rprPack(pack);
+    }
+    std::cout << "}\n";
+}
+
+void printCost(const std::vector<std::vector<Object>>& order) {
+    std::cout << "{";
+    int i = 0;
+    for (const auto& pack : order) {
+        std::cout << costObjects(pack) << ", ";
+        i++;
+        if (i == 10) {
+            i = 0;
+            std::cout << std::endl;
+        }
+    }
+    std::cout << "}\n";
+}
+
+std::string rprPack(const std::vector<Object>& pack) {
+    std::string out("{");
+    for (const Object& obj : pack) {
+        out += obj.name + ", ";
+    }
+    out += "},\n";
+    return out;
 }
 } // namespace d21

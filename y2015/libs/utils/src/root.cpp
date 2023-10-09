@@ -9,7 +9,6 @@ namespace utils {
 std::string getRootFolder() {
     bool found = false;
     std::string current_check(fs::current_path());
-    std::cout << current_check << std::endl;
     std::string out;
     do {
         const auto path = fs::directory_iterator{current_check + "/" + out};
