@@ -9,7 +9,7 @@ enum TypeInstruction {
     triple,
     increment,
     jump,
-    jumEven,
+    jumpEven,
     jumpOdd,
 };
 
@@ -24,8 +24,12 @@ class Computer {
 private:
     unsigned int registers[2];
     Instruction main[50];
+    unsigned int line;
+    int length;
 public:
     Computer(const std::string& file_name);
+    void pass();
+    [[nodiscard]] int getRegisterValue(int reg) const;
     FRIEND_TEST(ComputerTest, Constructor);
 };
 }
