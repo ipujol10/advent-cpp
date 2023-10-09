@@ -7,6 +7,8 @@ int main (int argc, char *argv[]) {
     d23::Computer computer(file_name);
     computer.pass();
     std::cout << "b = " << computer.getRegisterValue(1) << std::endl;
+    computer.pass(1);
+    std::cout << "b = " << computer.getRegisterValue(1) << std::endl;
     
     return 0;
 }

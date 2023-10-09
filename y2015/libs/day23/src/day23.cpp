@@ -4,7 +4,8 @@
 
 namespace d23 {
 Computer::Computer(const std::string& file_name) {
-    resset();
+    registers[0] = 0, registers[1] = 0;
+    line = 0;
     
     std::ifstream file(file_name);
     std::string line;
@@ -68,8 +69,9 @@ int Computer::getRegisterValue(int reg) const {
     return registers[reg];
 }
 
-void Computer::pass() {
-    resset();
+void Computer::pass(int a, int b) {
+    registers[0] = a, registers[1] = b;
+    line = 0;
     while (this->line < this->length) {
         const auto instruction = main[line];
         int reg = instruction.reg;
@@ -101,10 +103,5 @@ void Computer::pass() {
         }
         line++;
     }
-}
-
-void Computer::resset() {
-    registers[0] = 0, registers[1] = 0;
-    line = 0;
 }
 }

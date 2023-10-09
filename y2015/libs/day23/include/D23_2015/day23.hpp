@@ -26,10 +26,9 @@ private:
     Instruction main[50];
     unsigned int line;
     int length;
-    void resset();
 public:
     Computer(const std::string& file_name);
-    void pass();
+    void pass(int a = 0, int b = 0);
     [[nodiscard]] int getRegisterValue(int reg) const;
     FRIEND_TEST(ComputerTest, Constructor);
 };
