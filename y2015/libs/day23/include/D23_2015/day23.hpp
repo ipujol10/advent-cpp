@@ -1,0 +1,31 @@
+#pragma once
+
+#include <string>
+#include <gtest/gtest.h>
+
+namespace d23 {
+enum TypeInstruction {
+    half,
+    triple,
+    increment,
+    jump,
+    jumEven,
+    jumpOdd,
+};
+
+struct Instruction {
+    TypeInstruction type;
+    int reg;
+    int value;
+    bool operator==(const Instruction& left) const;
+};
+
+class Computer {
+private:
+    unsigned int registers[2];
+    Instruction main[50];
+public:
+    Computer(const std::string& file_name);
+    FRIEND_TEST(ComputerTest, Constructor);
+};
+}
