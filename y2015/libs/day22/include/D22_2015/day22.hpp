@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace d22 {
 struct Spell {
@@ -11,6 +12,7 @@ struct Spell {
     int heal;
     int mana;
     int turns;
+    bool operator==(const Spell& s) const;
 };
 
 struct BattleState {
@@ -20,6 +22,10 @@ struct BattleState {
     int bossHp;
     int bossDamage;
     int manaSpent;
-    Spell activeEffects[20];
+    std::vector<Spell> activeEffects;
 };
+
+std::vector<Spell> getSpells();
+bool hasBattleEnded(const BattleState& state);
+std::vector<Spell> getAvailableSeplls(const BattleState& state);
 }
