@@ -18,6 +18,7 @@ struct Spell {
 
 class Battle {
 private:
+    const std::vector<Spell> spells;
     int playerHp;
     int playerMana;
     int playerArmor;
@@ -25,12 +26,12 @@ private:
     int bossDamage;
     int manaSpent;
     std::vector<Spell> activeEffects;
+    bool hasBattleEnded() const;
+    std::vector<Spell> getAvailableSpells() const;
+    bool isSpellAvailable(const Spell& spell) const;
 public:
     Battle();
     FRIEND_TEST(BattleTest, Constructor);
+    FRIEND_TEST(BattleTest, AvailableSpells);
 };
-
-std::vector<Spell> getSpells();
-bool hasBattleEnded(const Battle& state);
-std::vector<Spell> getAvailableSeplls(const Battle& state);
 }
