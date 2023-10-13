@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <gtest/gtest.h>
 
 namespace d22 {
 struct Spell {
@@ -15,7 +16,8 @@ struct Spell {
     bool operator==(const Spell& s) const;
 };
 
-struct BattleState {
+class Battle {
+private:
     int playerHp;
     int playerMana;
     int playerArmor;
@@ -23,9 +25,12 @@ struct BattleState {
     int bossDamage;
     int manaSpent;
     std::vector<Spell> activeEffects;
+public:
+    Battle();
+    FRIEND_TEST(BattleTest, Constructor);
 };
 
 std::vector<Spell> getSpells();
-bool hasBattleEnded(const BattleState& state);
-std::vector<Spell> getAvailableSeplls(const BattleState& state);
+bool hasBattleEnded(const Battle& state);
+std::vector<Spell> getAvailableSeplls(const Battle& state);
 }
