@@ -48,4 +48,22 @@ std::vector<Spell> Battle::getAvailableSpells() const {
     }
     return out;
 }
+
+int Battle::sumProps(const SumProps& type) const {
+    int sum = 0;
+    for (const Spell& spell : this->activeEffects) {
+        switch (type) {
+            case SumProps::damage:
+                sum += spell.damage;
+                break;
+            case SumProps::mana:
+                sum += spell.mana;
+                break;
+            case SumProps::armor:
+                sum += spell.armor;
+                break;
+        }
+    }
+    return sum;
+}
 }

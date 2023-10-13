@@ -16,6 +16,12 @@ struct Spell {
     bool operator==(const Spell& s) const;
 };
 
+enum SumProps {
+    mana,
+    armor,
+    damage
+};
+
 class Battle {
 private:
     const std::vector<Spell> spells;
@@ -29,6 +35,7 @@ private:
     bool hasBattleEnded() const;
     std::vector<Spell> getAvailableSpells() const;
     bool isSpellAvailable(const Spell& spell) const;
+    int sumProps(const SumProps& type) const;
 public:
     Battle();
     FRIEND_TEST(BattleTest, Constructor);
