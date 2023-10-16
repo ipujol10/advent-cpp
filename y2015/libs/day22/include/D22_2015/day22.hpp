@@ -32,5 +32,5 @@ struct State {
 };
 
 void addState(std::vector<State>& states, const State& state);
-int winMinMana(int hp, int damage);
+int winMinMana(int hp, int damage, bool hard = false);
 }

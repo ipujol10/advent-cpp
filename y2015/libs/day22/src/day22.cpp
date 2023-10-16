@@ -121,7 +121,7 @@ void addState(std::vector<State> &states, const State &state) {
     }
 }
 
-int winMinMana(int hp, int damage) {
+int winMinMana(int hp, int damage, bool hard) {
     std::vector<State> states;
     states.emplace_back(hp, damage);
 
@@ -143,6 +143,10 @@ int winMinMana(int hp, int damage) {
             if (candidate.enemyHp == 0 && candidate.cost < bestCost) {
                 bestCost = candidate.cost;
             }
+            continue;
+        }
+
+        if (hard && --candidate.myHp == 0) {
             continue;
         }
 
