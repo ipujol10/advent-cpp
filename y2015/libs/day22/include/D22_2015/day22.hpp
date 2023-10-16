@@ -7,10 +7,10 @@ struct State {
     unsigned int myArmour{0};
     unsigned int enemyHp;
     unsigned int enemyDamage;
-    unsigned int shieldCounter;
-    unsigned int poisonCounter;
-    unsigned int rechargeCounter;
-    unsigned int cost;
+    unsigned int shieldCounter{0};
+    unsigned int poisonCounter{0};
+    unsigned int rechargeCounter{0};
+    unsigned int cost{0};
 
     State(unsigned int enemyHp, unsigned int enemyDamage);
 
