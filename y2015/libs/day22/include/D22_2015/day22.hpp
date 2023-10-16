@@ -1,44 +1,31 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <gtest/gtest.h>
-
 namespace d22 {
-struct Spell {
-    std::string name;
-    int cost;
-    int damage;
-    int armor;
-    int heal;
-    int mana;
-    int turns;
-    bool operator==(const Spell& s) const;
-};
+struct State {
+    unsigned int myHp{50};
+    unsigned int myMana{500};
+    unsigned int myArmour{0};
+    unsigned int enemyHp;
+    unsigned int enemyDamage;
+    unsigned int shieldCounter;
+    unsigned int poisonCounter;
+    unsigned int rechargeCounter;
+    unsigned int cost;
 
-enum SumProps {
-    mana,
-    armor,
-    damage
-};
+    State(unsigned int enemyHp, unsigned int enemyDamage);
 
-class Battle {
-private:
-    const std::vector<Spell> spells;
-    int playerHp;
-    int playerMana;
-    int playerArmor;
-    int bossHp;
-    int bossDamage;
-    int manaSpent;
-    std::vector<Spell> activeEffects;
-    bool hasBattleEnded() const;
-    std::vector<Spell> getAvailableSpells() const;
-    bool isSpellAvailable(const Spell& spell) const;
-    int sumProps(const SumProps& type) const;
-public:
-    Battle();
-    FRIEND_TEST(BattleTest, Constructor);
-    FRIEND_TEST(BattleTest, AvailableSpells);
+    bool operator==(const State& rhs) const;
+
+    bool applyEffects();
+    void hitEnemy(unsigned int damage);
+    void hitMe();
+    void spendMana(unsigned int amount);
+    void enemyTurn();
+
+    [[nodiscard]] State missile() const;
+    [[nodiscard]] State drain() const;
+    [[nodiscard]] State shield() const;
+    [[nodiscard]] State poison() const;
+    [[nodiscard]] State recharge() const;
 };
 }
