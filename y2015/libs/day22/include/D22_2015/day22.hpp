@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace d22 {
 struct State {
     unsigned int myHp{50};
@@ -28,4 +30,7 @@ struct State {
     [[nodiscard]] State poison() const;
     [[nodiscard]] State recharge() const;
 };
+
+void addState(std::vector<State>& states, const State& state);
+int winMinMana(int hp, int damage);
 }
