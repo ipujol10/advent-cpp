@@ -28,23 +28,39 @@ public:
   std::string getOut() const;
   virtual void setA(valType val);
   virtual std::string getA() const;
+  virtual void setB(valType val);
+  virtual std::string getB() const;
   virtual std::optional<valType> execute();
   bool operator>(const Gate &left) const;
   bool operator>=(const Gate &left) const;
   virtual bool isOneEntry() const;
 };
 
-class OneInput: protected Gate {
+class OneInput : protected Gate {
 protected:
   std::string a_name;
   bool a_set;
   valType a;
 
   void setA() override;
-  
+
 public:
   void setA(valType val) override;
   std::string getA() const override;
   virtual bool isOneEntry() const override;
+};
+
+class TwoInputs : protected OneInput {
+protected:
+  std::string b_name;
+  bool b_set;
+  valType b;
+
+  void setB() override;
+
+public:
+  void setB(valType val) override;
+  std::string getB() const override;
+  bool isOneEntry() const override;
 };
 } // namespace d7v
