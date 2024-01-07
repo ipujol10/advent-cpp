@@ -3,7 +3,6 @@
 #include <regex>
 #include <iostream>
 #include <sstream>
-#include <stdexcept>
 
 namespace d7i {
     Gate::Gate(const std::string& a, const std::string& out,

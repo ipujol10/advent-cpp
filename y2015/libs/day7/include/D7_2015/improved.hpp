@@ -1,7 +1,6 @@
 #ifndef IMPROVED_HPP
 #define IMPROVED_HPP
 
-#include "day7.hpp"
 #include <map>
 #include <optional>
 #include <string>

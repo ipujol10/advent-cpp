@@ -1,7 +1,6 @@
 #include <D7_2015/improved.hpp>
 #include <D7_2015/day7.hpp>
 #include <iostream>
-#include <fstream>
 #include <string>
 
 void slowMethod(const std::string& file_name) {

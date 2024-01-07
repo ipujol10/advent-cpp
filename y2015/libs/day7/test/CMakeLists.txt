@@ -10,6 +10,6 @@ if (BUILD_TESTING)
         )
     FetchContent_MakeAvailable(googletest)
 
-    add_executable(${TEST_NAME} test.cpp test_improved.cpp)
+    add_executable(${TEST_NAME} test.cpp test_virtual.cpp)
     target_link_libraries(${TEST_NAME} gtest_main D7_2015)
 endif()

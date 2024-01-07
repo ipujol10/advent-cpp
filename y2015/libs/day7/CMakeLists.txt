@@ -7,6 +7,8 @@ add_library(${LIBRARY_NAME} STATIC
     src/day7.cpp
     include/${LIBRARY_NAME}/improved.hpp
     src/improved.cpp
+    include/${LIBRARY_NAME}/virtual.hpp
+    src/virtual.cpp
     )
 
 target_include_directories(${LIBRARY_NAME} PRIVATE
