@@ -149,4 +149,76 @@ std::optional<valType> RShift::execute() {
   }
   return a >> b;
 }
+
+MinHeap::MinHeap() : length(0) {}
+
+void MinHeap::insert(Gate *value) {
+  data[length] = value;
+  heapifyUp(length);
+  length++;
+}
+
+Gate *MinHeap::pop() {
+  if (length == 0) {
+    throw -1;
+  }
+  const auto out = data[0];
+  length--;
+  if (length == 0) {
+    return out;
+  }
+
+  data[0] = data[length];
+  heapifyDown(0);
+
+  return out;
+}
+
+void MinHeap::heapifyDown(int idx) {
+  int lIdx = leftChild(idx);
+  int rIdx = rightChild(idx);
+
+  if (idx >= length || lIdx >= length) {
+    return;
+  }
+
+  auto lV = data[lIdx];
+  auto rV = data[rIdx];
+  auto v = data[idx];
+
+  if (*lV >= *rV && *v > *rV) {
+    data[idx] = rV;
+    data[rIdx] = v;
+    heapifyDown(rIdx);
+  } else if (*rV >= *lV && *v > *lV) {
+    data[idx] = lV;
+    data[lIdx] = v;
+    heapifyDown(lIdx);
+  }
+}
+
+void MinHeap::heapifyUp(int idx) {
+  if (idx == 0) {
+    return;
+  }
+
+  int p = parent(idx);
+  auto parentV = data[p];
+  auto v = data[idx];
+  if (*parentV > *v) {
+    data[idx] = parentV;
+    data[p] = v;
+    heapifyUp(p);
+  }
+}
+
+int MinHeap::parent(int idx) const { return (idx - 1) / 2; }
+
+int MinHeap::leftChild(int idx) const { return idx * 2 + 1; }
+
+int MinHeap::rightChild(int idx) const { return idx * 2 + 2; }
+
+bool MinHeap::isEmpty() const { return length == 0; }
+
+int MinHeap::getLength() const { return length; }
 } // namespace d7v

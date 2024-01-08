@@ -101,4 +101,22 @@ public:
   RShift(const std::string &a, const std::string &b, const std::string &out);
   std::optional<valType> execute() override;
 };
+
+class MinHeap {
+private:
+  int length;
+  Gate *data[400];
+  void heapifyDown(int idx);
+  void heapifyUp(int idx);
+  int parent(int idx) const;
+  int leftChild(int idx) const;
+  int rightChild(int idx) const;
+
+public:
+  MinHeap();
+  void insert(Gate *value);
+  Gate *pop();
+  bool isEmpty() const;
+  int getLength() const;
+};
 } // namespace d7v
