@@ -11,6 +11,14 @@ bool Gate::operator>=(const Gate &left) const {
   return this->priority >= left.priority;
 }
 
+std::string Gate::getA() const { return "Gate A"; }
+
+std::string Gate::getB() const { return "Gate B"; }
+
+std::optional<valType> Gate::execute() { return {}; }
+
+bool Gate::isOneEntry() const { return false; }
+
 OneInput::OneInput(const std::string &a, const std::string &out) : a_name(a) {
   this->out = out;
   setA();
@@ -42,10 +50,10 @@ TwoInputs::TwoInputs(const std::string &a, const std::string &b,
 
 void TwoInputs::setB() {
   try {
-    this->b = (valType)std::stoi(this->a_name);
-    this->a_set = true;
+    this->b = (valType)std::stoi(this->b_name);
+    this->b_set = true;
   } catch (...) {
-    this->a_set = false;
+    this->b_set = false;
   }
 }
 
@@ -58,13 +66,12 @@ std::string TwoInputs::getB() const { return b_name; }
 
 bool TwoInputs::isOneEntry() const { return false; }
 
-SetGate::SetGate(const std::string &a, const std::string &out)
-    : OneInput(a, out) {
+Set::Set(const std::string &a, const std::string &out) : OneInput(a, out) {
   priority = 0;
   type = gateType::SetGate;
 }
 
-std::optional<valType> SetGate::execute() {
+std::optional<valType> Set::execute() {
   priority++;
   if (!a_set) {
     return {};
@@ -72,13 +79,12 @@ std::optional<valType> SetGate::execute() {
   return a;
 }
 
-NotGate::NotGate(const std::string &a, const std::string &out)
-    : OneInput(a, out) {
+Not::Not(const std::string &a, const std::string &out) : OneInput(a, out) {
   priority = 5;
   type = gateType::NotGate;
 }
 
-std::optional<valType> NotGate::execute() {
+std::optional<valType> Not::execute() {
   priority++;
   if (!a_set) {
     return {};
@@ -86,14 +92,13 @@ std::optional<valType> NotGate::execute() {
   return ~a;
 }
 
-AndGate::AndGate(const std::string &a, const std::string &b,
-                 const std::string &out)
+And::And(const std::string &a, const std::string &b, const std::string &out)
     : TwoInputs(a, b, out) {
   priority = 15;
   type = gateType::AndGate;
 }
 
-std::optional<valType> AndGate::execute() {
+std::optional<valType> And::execute() {
   priority++;
   if (!(a_set && b_set)) {
     return {};
@@ -101,14 +106,13 @@ std::optional<valType> AndGate::execute() {
   return a & b;
 }
 
-OrGate::OrGate(const std::string &a, const std::string &b,
-               const std::string &out)
+Or::Or(const std::string &a, const std::string &b, const std::string &out)
     : TwoInputs(a, b, out) {
   priority = 15;
   type = gateType::OrGate;
 }
 
-std::optional<valType> OrGate::execute() {
+std::optional<valType> Or::execute() {
   priority++;
   if (!(a_set && b_set)) {
     return {};
@@ -116,14 +120,14 @@ std::optional<valType> OrGate::execute() {
   return a | b;
 }
 
-LeftShift::LeftShift(const std::string &a, const std::string &b,
-                     const std::string &out)
+LShift::LShift(const std::string &a, const std::string &b,
+               const std::string &out)
     : TwoInputs(a, b, out) {
   priority = 10;
   type = gateType::LeftShift;
 }
 
-std::optional<valType> LeftShift::execute() {
+std::optional<valType> LShift::execute() {
   priority++;
   if (!(a_set && b_set)) {
     return {};
@@ -131,14 +135,14 @@ std::optional<valType> LeftShift::execute() {
   return a << b;
 }
 
-RightShift::RightShift(const std::string &a, const std::string &b,
-                       const std::string &out)
+RShift::RShift(const std::string &a, const std::string &b,
+               const std::string &out)
     : TwoInputs(a, b, out) {
   priority = 10;
   type = gateType::RightShift;
 }
 
-std::optional<valType> RightShift::execute() {
+std::optional<valType> RShift::execute() {
   priority++;
   if (!(a_set && b_set)) {
     return {};

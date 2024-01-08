@@ -21,14 +21,14 @@ protected:
   std::string out;
   gateType type;
 
-  virtual void setA();
-  virtual void setB();
+  virtual void setA(){};
+  virtual void setB(){};
 
 public:
   std::string getOut() const;
-  virtual void setA(valType val);
+  virtual void setA(valType val){};
   virtual std::string getA() const;
-  virtual void setB(valType val);
+  virtual void setB(valType val){};
   virtual std::string getB() const;
   virtual std::optional<valType> execute();
   bool operator>(const Gate &left) const;
@@ -36,7 +36,7 @@ public:
   virtual bool isOneEntry() const;
 };
 
-class OneInput : protected Gate {
+class OneInput : public Gate {
 protected:
   std::string a_name;
   bool a_set;
@@ -51,7 +51,7 @@ public:
   virtual bool isOneEntry() const override;
 };
 
-class TwoInputs : protected OneInput {
+class TwoInputs : public OneInput {
 protected:
   std::string b_name;
   bool b_set;
@@ -66,40 +66,39 @@ public:
   bool isOneEntry() const override;
 };
 
-class SetGate : protected OneInput {
+class Set : public OneInput {
 public:
-  SetGate(const std::string &a, const std::string &out);
+  Set(const std::string &a, const std::string &out);
   std::optional<valType> execute() override;
 };
 
-class NotGate : protected OneInput {
+class Not : public OneInput {
 public:
-  NotGate(const std::string &a, const std::string &out);
+  Not(const std::string &a, const std::string &out);
   std::optional<valType> execute() override;
 };
 
-class AndGate : protected TwoInputs {
+class And : public TwoInputs {
 public:
-  AndGate(const std::string &a, const std::string &b, const std::string &out);
+  And(const std::string &a, const std::string &b, const std::string &out);
   std::optional<valType> execute() override;
 };
 
-class OrGate : protected TwoInputs {
+class Or : public TwoInputs {
 public:
-  OrGate(const std::string &a, const std::string &b, const std::string &out);
+  Or(const std::string &a, const std::string &b, const std::string &out);
   std::optional<valType> execute() override;
 };
 
-class LeftShift : protected TwoInputs {
+class LShift : public TwoInputs {
 public:
-  LeftShift(const std::string &a, const std::string &b, const std::string &out);
+  LShift(const std::string &a, const std::string &b, const std::string &out);
   std::optional<valType> execute() override;
 };
 
-class RightShift : protected TwoInputs {
+class RShift : public TwoInputs {
 public:
-  RightShift(const std::string &a, const std::string &b,
-             const std::string &out);
+  RShift(const std::string &a, const std::string &b, const std::string &out);
   std::optional<valType> execute() override;
 };
 } // namespace d7v
