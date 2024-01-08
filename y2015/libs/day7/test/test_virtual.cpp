@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-TEST(GatesTest, Execute) {
+TEST(GatesTest, ExecuteII) {
   d7v::Gate *set = new d7v::Set("a", "x");
   EXPECT_FALSE(set->execute());
   set->setA(123);
@@ -26,7 +26,7 @@ TEST(GatesTest, Execute) {
   EXPECT_EQ(right->execute().value(), 23);
 }
 
-TEST(HeapTest, Create) {
+TEST(HeapTest, CreateII) {
   d7v::MinHeap h;
   d7v::Gate *a = new d7v::Set("1", "out0"),
     *b = new d7v::Set("b", "out1"),
@@ -49,7 +49,6 @@ TEST(HeapTest, Create) {
   d7v::Gate *gate;
   while (!h.isEmpty()) {
     gate = h.pop();
-    std::cout << gate->getOut() << std::endl;
     if (gate->getOut() == "out0") {
       EXPECT_TRUE(gate->execute());
       EXPECT_EQ(gate->execute().value(), 1);
@@ -60,4 +59,57 @@ TEST(HeapTest, Create) {
       }
     }
   }
+}
+
+TEST(CircuitTest, PassII) {
+    std::string file = "../../../../../libs/day7/test/files/test.txt";
+    d7v::Circuit c;
+    c.readFromFile(file);
+    c.pass();
+    EXPECT_EQ(c.get("d"), 72);
+    EXPECT_EQ(c.get("e"), 507);
+    EXPECT_EQ(c.get("f"), 492);
+    EXPECT_EQ(c.get("g"), 114);
+    EXPECT_EQ(c.get("h"), 65412);
+    EXPECT_EQ(c.get("i"), 65079);
+    EXPECT_EQ(c.get("x"), 123);
+    EXPECT_EQ(c.get("y"), 456);
+}
+
+TEST(CircuitTest, PassDelayedSignalII) {
+    std::string file = "../../../../../libs/day7/test/files/test2.txt";
+    d7v::Circuit c;
+    c.readFromFile(file);
+    c.pass();
+    EXPECT_EQ(c.get("d"), 72);
+    EXPECT_EQ(c.get("e"), 507);
+    EXPECT_EQ(c.get("f"), 492);
+    EXPECT_EQ(c.get("g"), 114);
+    EXPECT_EQ(c.get("h"), 65412);
+    EXPECT_EQ(c.get("i"), 65079);
+    EXPECT_EQ(c.get("x"), 123);
+    EXPECT_EQ(c.get("y"), 456);
+}
+
+namespace d7v {
+TEST(CircuitTest, GetElementsII) {
+    Gate *g;
+    Circuit c;
+    c.getElements("123 -> x");
+    g = c.heap.pop();
+    EXPECT_EQ(g->execute().value(), 123);
+    EXPECT_EQ(g->getOut(), "x");
+
+    c.getElements("x AND y -> d");
+    g = c.heap.pop();
+    EXPECT_EQ(g->getA(), "x");
+    EXPECT_EQ(g->getB(), "y");
+    EXPECT_EQ(g->getOut(), "d");
+
+    c.getElements("xa OR ya -> ea");
+    g = c.heap.pop();
+    EXPECT_EQ(g->getA(), "xa");
+    EXPECT_EQ(g->getB(), "ya");
+    EXPECT_EQ(g->getOut(), "ea");
+}
 }

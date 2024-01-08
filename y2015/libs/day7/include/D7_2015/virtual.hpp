@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtest/gtest.h>
+#include <map>
 #include <optional>
 #include <string>
 
@@ -118,5 +120,24 @@ public:
   Gate *pop();
   bool isEmpty() const;
   int getLength() const;
+};
+
+class Circuit {
+private:
+  std::map<std::string, valType> values;
+  MinHeap heap;
+  bool exists(const std::string &cable) const;
+  void getElements(const std::string &in);
+
+public:
+  Circuit(){};
+  void readFromFile(const std::string &file_name);
+  void readFromFile(const std::string &file_name, const std::string &el,
+                    valType value);
+  void pass();
+  std::optional<valType> getNumber(const std::string &cable) const;
+  valType get(const std::string &cable) const;
+  bool isNumber(const std::string &in) const;
+  FRIEND_TEST(CircuitTest, GetElementsII);
 };
 } // namespace d7v
